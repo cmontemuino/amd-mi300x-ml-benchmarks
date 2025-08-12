@@ -1,0 +1,172 @@
+[project]
+name = "amd-mi300x-ml-benchmarks"
+version = "0.1.0"
+description = "Comprehensive benchmarking suite for AMD MI300X GPU performance analysis"
+authors = [
+    { name = "Carlos Montemuiño" }
+]
+readme = "README.md"
+license = { text = "Apache-2.0"}
+requires-python = ">=3.12"
+keywords = ["amd", "mi300x", "gpu", "benchmarking", "machine-learning", "vllm", "deep-learning"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: System :: Hardware",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.12",
+]
+
+# Core runtime dependencies - minimal for reproducibility
+dependencies = [
+    "typer>=0.16.0",
+    "pyyaml>=6.0.1",
+    "pydantic>=2.11.7",
+    "rich>=14.1.0",
+    "structlog>=25.4.0",
+]
+
+[project.optional-dependencies]
+# Analysis-only dependencies (workstation-friendly)
+analysis = [
+    "pandas>=2.3.0",
+    "matplotlib>=3.10.0",
+    "seaborn>=0.13.2",
+    "numpy>=2.3.0",
+    "scipy>=1.16.1",
+    "plotly>=6.2.0",
+    "jupyter>=1.1.1",
+]
+
+# Benchmark dependencies (server-only)
+benchmark = [
+    "psutil>=7.0.0",
+    "requests>=2.32.0",
+]
+
+# Development dependencies
+dev = [
+    "pytest>=8.4.0",
+    "pytest-cov>=6.2.0",
+    "black>=25.1.0",
+    "ruff>=0.12.0",
+    "mypy>=1.17.0",
+    "mkdocs>=1.6.1",
+    "mkdocstrings>=0.30.0",
+    "mkdocs-git-authors-plugin>=0.10.0",
+    "mkdocs-git-revision-date-localized-plugin>=1.4.7",
+    "mkdocs-material>=9.6.16",
+    "mkdocs-minify-plugin>=0.8.0",
+    "types-PyYAML>=6.0.12.20250809",
+    "pandas-stubs>=2.3.0.250703",
+]
+
+[project.urls]
+Homepage = "https://github.com/cmontemuino/amd-mi300x-ml-benchmarks"
+Repository = "https://github.com/cmontemuino/amd-mi300x-ml-benchmarks"
+Documentation = "https://cmontemuino.github.io/amd-mi300x-ml-benchmarks"
+"Bug Tracker" = "https://github.com/cmontemuino/amd-mi300x-ml-benchmarks/issues"
+
+[project.scripts]
+# Analysis tools (workstation)
+analyze-results = "amd_bench.cli.analyze:app"
+
+# Benchmark tools (server)
+#run-benchmark = "amd_bench.cli.benchmark:app"
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/amd_bench"]
+sources = ["src"]
+only-packages = true
+
+[[tool.uv.index]]
+url = "https://pypi.org/simple/"
+default = true
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "B", "A", "C4", "PT"]
+ignore = ["E501"]  # handled by black line-length
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # Allow unused imports in init files
+"tests/*" = ["S101"]      # Allow asserts in tests
+"*/cli/*.py" = ["B008"]   # Allow typer.Option calls in CLI modules
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+strict = true
+show_error_codes = true
+exclude = ["build/", "dist/", ".venv/"]
+
+[[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "seaborn.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--cov=src/amd_bench",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "gpu: marks tests that require GPU hardware",
+]
+
+[tool.coverage.run]
+source = ["src/amd_bench"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[dependency-groups]
+dev = [
+    "mkdocstrings-python>=1.16.12",
+]

@@ -1,6 +1,16 @@
 # Understanding Benchmark Results
 
-> **Quick Navigation**: [Visual Analysis Guide](#visual-analysis-guide) | [Tables Guide](#statistical-tables-guide) | [Statistical Significance](#statistical-methodology) | [Troubleshooting](#troubleshooting-performance-issues) | [References](#references)
+> **⚠️ Educational Purpose Notice**
+>
+> This analysis guide serves **solely for educational purposes** to help users understand how to interpret benchmark results from the AMD MI300X ML Benchmarks framework. All data samples, insights, conclusions, and next steps presented in this guide are **examples only** and should not be treated as definitive research findings.
+>
+> - **Sample data**: Representative examples for demonstration, not actual experimental results
+> - **Performance analysis**: Illustrative examples of interpretation methods
+> - **Key insights**: Educational examples of how to draw insights from benchmark data
+> - **Next steps**: Example recommendations for further investigation
+>
+> For actual research findings and validated performance data, refer to the peer-reviewed publications and official benchmark reports from this project.
+
 
 ## Overview
 

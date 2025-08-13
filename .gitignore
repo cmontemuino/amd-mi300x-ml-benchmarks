@@ -2,19 +2,23 @@
 analysis/
 !analysis/.gitkeep
 
-# Analysis artifacts
-*.png
-*.pdf
-*.html
+# Analysis artifacts in specific directories
 **/plots/
 **/reports/
 **/tables/
 
-# Keep assets for documentation
+# Keep assets for documentation FIRST (before global exclusions)
 !docs/assets/
+!docs/assets/**/*.png
+!docs/assets/**/*.jpg
+!docs/assets/**/*.svg
 !assets/**/*.png
 !assets/**/*.jpg
 !assets/**/*.svg
+
+# Exclude formats globally
+*.pdf
+*.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -81,12 +85,8 @@ docs/_build/
 target/
 
 
-
-
-
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
-
 
 # Environments
 .env

@@ -5,9 +5,9 @@ from typing import Optional
 
 import typer
 
-from ..core.analysis import BenchmarkAnalyzer
-from ..schemas.benchmark import AnalysisConfig
-from ..utils.paths import load_analysis_config_from_yaml
+from amd_bench.core.analysis import BenchmarkAnalyzer
+from amd_bench.schemas.benchmark import AnalysisConfig
+from amd_bench.utils.paths import load_analysis_config_from_yaml
 
 app = typer.Typer(help="Analysis tools for AMD MI300X benchmarks")
 
@@ -25,7 +25,15 @@ def run(
         None,
         help="Output directory for analysis results",
     ),
-    config_file: Optional[Path] = typer.Option(
+    logs_dir: Optional[str] = typer.Option(
+        "logs",
+        help="Sub directory under input-dir for containing experiment logs",
+    ),
+    monitoring_dir: Optional[str] = typer.Option(
+        "monitoring",
+        help="Sub directory under input-dir for monitoring metrics",
+    ),
+    config_file: Optional[str] = typer.Option(
         None,
         exists=True,
         file_okay=True,
@@ -46,7 +54,12 @@ def run(
                 "Either --config-file or both --input-dir and --output-dir must be provided"
             )
 
-        config = AnalysisConfig(input_dir=input_dir, output_dir=output_dir)
+        config = AnalysisConfig(
+            input_dir=input_dir,
+            output_dir=output_dir,
+            logs_subdir=logs_dir,
+            monitoring_subdir=monitoring_dir,
+        )
 
     analyzer = BenchmarkAnalyzer(config)
 

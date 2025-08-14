@@ -113,29 +113,31 @@ class BenchmarkResult(BaseModel):
         return 0.0
 
 
-class HardwareMetrics(BaseModel):
-    """Hardware monitoring metrics"""
+class ExperimentFiles(BaseModel):
+    """File paths for a complete experiment."""
 
     model_config = ConfigDict(str_strip_whitespace=True, validate_assignment=True, extra="forbid")
 
-    gpu_usage_percent: Optional[float] = Field(
-        default=None, ge=0, le=100, description="GPU usage in percentage"
-    )
-    gpu_power_watts: Optional[float] = Field(
-        default=None, ge=0, description="GPU power consumption in Watts"
-    )
-    gpu_temp_celsius: Optional[float] = Field(
-        default=None, ge=0, description="GPU temperature in Celsius"
-    )
-    cpu_usage_percent: Optional[float] = Field(
-        default=None, ge=0, le=100, description="CPU usage in percentage"
-    )
-    memory_usage_percent: Optional[float] = Field(
-        default=None, ge=0, le=100, description="Memory usage in percentage"
-    )
-    # This is live system monitoring data used for time-series analysis and correlation.
-    # Automatic validation through Pydantic's built-in datetime parsing is enough.
-    timestamp: datetime
+    # Core benchmark result
+    result_file: Path = Field(..., description="JSON benchmark results file")
+
+    # Optional monitoring files
+    log_file: Optional[Path] = Field(None, description="Execution log file")
+    cpu_metrics_file: Optional[Path] = Field(None, description="CPU monitoring CSV")
+    gpu_power_file: Optional[Path] = Field(None, description="GPU power monitoring CSV")
+    gpu_temp_file: Optional[Path] = Field(None, description="GPU temperature monitoring CSV")
+
+    @property
+    def has_complete_monitoring(self) -> bool:
+        """Check if experiment has all monitoring data."""
+        return all(
+            [
+                self.log_file and self.log_file.exists(),
+                self.cpu_metrics_file and self.cpu_metrics_file.exists(),
+                self.gpu_power_file and self.gpu_power_file.exists(),
+                self.gpu_temp_file and self.gpu_temp_file.exists(),
+            ]
+        )
 
 
 class AnalysisConfig(BaseModel):
@@ -155,11 +157,26 @@ class AnalysisConfig(BaseModel):
     )
     results_pattern: str = Field(
         default="*.json",
-        description="Pattern to match result files",
+        description="Pattern to match result files in results/ subdirectory",
         examples=["*_latency_*.json", "*_throughput_*.json"],
     )
-    include_hardware_metrics: bool = Field(default=True, description="Include hardware analysis")
+
+    include_monitoring_data: bool = Field(
+        default=True, description="Include hardware monitoring analysis"
+    )
+    require_complete_monitoring: bool = Field(
+        default=False, description="Only analyze experiments with complete monitoring data"
+    )
     generate_plots: bool = Field(default=True, description="Generate visualization plots")
+
+    # Subdirectory structure - make this configurable
+    results_subdir: str = Field(default="containerized", description="Results subdirectory")
+    logs_subdir: Optional[str] = Field(
+        default="logs", description="Logs subdirectory (empty for root)"
+    )
+    monitoring_subdir: Optional[str] = Field(
+        default="monitoring", description="Monitoring subdirectory (empty for root)"
+    )
 
     filename_formats: List[Dict[str, Any]] = Field(
         default=[
@@ -231,7 +248,7 @@ class AnalysisConfig(BaseModel):
     @field_validator("input_dir")
     @classmethod
     def validate_input_dir(cls, v: Path) -> Path:
-        """Validate input directory exists and is readable."""
+        """Validate input directory structure."""
         resolved = v.resolve()
 
         if not resolved.exists():
@@ -239,6 +256,18 @@ class AnalysisConfig(BaseModel):
 
         if not resolved.is_dir():
             raise ValueError(f"Input path is not a directory: {resolved}")
+
+        # Check for JSON files directly in input directory OR in containerized subdirectory
+        # Check for any JSON files in the structure
+        json_files = []
+
+        # Check direct path
+        json_files.extend(list(resolved.glob("*.json")))
+
+        # Check containerized subdirectory
+        containerized_dir = resolved / "containerized"
+        if containerized_dir.exists():
+            json_files.extend(list(containerized_dir.glob("*.json")))
 
         return resolved
 

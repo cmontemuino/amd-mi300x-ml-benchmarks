@@ -45,10 +45,10 @@ from amd_bench.core.analysis import BenchmarkAnalyzer
 from amd_bench.schemas.benchmark import AnalysisConfig
 
 # Basic configuration
-
 config = AnalysisConfig(
     input_dir=Path("datasets/sample-results"),
-    output_dir=Path("analysis/sample-output")
+    output_dir=Path("analysis/sample-output"),
+    results_subdir="containerized"  # JSON files in containerized/
 )
 
 analyzer = BenchmarkAnalyzer(config)

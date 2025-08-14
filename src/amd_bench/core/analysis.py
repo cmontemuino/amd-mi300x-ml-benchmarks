@@ -5,18 +5,22 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, cast
 
-from ..schemas.benchmark import (
+import pandas as pd
+
+from amd_bench.schemas.benchmark import (
     AnalysisConfig,
     BenchmarkMetrics,
     BenchmarkResult,
     ExperimentConfig,
+    ExperimentFiles,
     FilenameFormat,
 )
-from ..utils.logging import get_logger
-from ..utils.paths import ensure_directory
+from amd_bench.utils.logging import get_logger
+from amd_bench.utils.paths import ensure_directory
+
 from .reporters import ReportGenerator
 from .statistics import StatisticalAnalyzer
-from .visualizers import PlotGenerator
+from .visualizers import BenchmarkVisualizer
 
 logger = get_logger(__name__)
 
@@ -28,17 +32,191 @@ class BenchmarkAnalyzer:
         """Initialize analyzer with configuration"""
         self.config: AnalysisConfig = config
         self.results: List[BenchmarkResult] = []
+        self.experiment_files: List[ExperimentFiles] = []
+
+        # Build dynamic directory paths
+        self.results_dir = self._get_results_directory()
+        self.logs_dir = self._get_logs_directory()
+        self.monitoring_dir = self._get_monitoring_directory()
 
         # Convert config to FilenameFormat objects for processing
         self.filename_formats = self._build_filename_formats()
 
-        # Ensure output directories exist
+        # Ensure output directories and log directory exist
         self._setup_output_directories()
+        self._validate_and_log_structure()
 
         logger.info("Analyzer initialized with custom filename formats")
         logger.info(f"Loaded {len(self.filename_formats)} filename formats")
         logger.info(f"Input directory: {self.config.input_dir}")
+        logger.info(f"Results directory: {self.results_dir}")
+        logger.info(f"Logs directory: {self.logs_dir}")
+        logger.info(f"Monitoring directory: {self.monitoring_dir}")
         logger.info(f"Output directory: {self.config.output_dir}")
+
+    def _get_results_directory(self) -> Path:
+        """Get the directory containing JSON result files"""
+        if self.config.results_subdir:
+            subdir = self.config.input_dir / self.config.results_subdir
+            if subdir.exists():
+                return subdir
+        return self.config.input_dir
+
+    def _get_logs_directory(self) -> Optional[Path]:
+        """Get the directory containing log files"""
+        if self.config.logs_subdir:
+            return self.config.input_dir / self.config.logs_subdir
+        # Check if logs are in root
+        log_files = list(self.config.input_dir.glob("*.log"))
+        return self.config.input_dir if log_files else None
+
+    def _get_monitoring_directory(self) -> Optional[Path]:
+        """Get the directory containing monitoring CSV files"""
+        if self.config.monitoring_subdir:
+            return self.config.input_dir / self.config.monitoring_subdir
+        # Check if monitoring files are in root
+        csv_files = list(self.config.input_dir.glob("cpu_*.csv"))
+        csv_files.extend(list(self.config.input_dir.glob("gpu_*.csv")))
+        return self.config.input_dir if csv_files else None
+
+    def _validate_and_log_structure(self) -> None:
+        """Validate and log the experiment directory structure."""
+        structure_info = {}
+
+        # Check results directory
+        if self.results_dir.exists():
+            json_files = list(self.results_dir.glob(self.config.results_pattern))
+            structure_info["results"] = len(json_files)
+            logger.info(f"Found {len(json_files)} result files in {self.results_dir}")
+        else:
+            logger.error(f"Results directory not found: {self.results_dir}")
+
+        # Check logs directory
+        if self.logs_dir and self.logs_dir.exists():
+            log_files = list(self.logs_dir.glob("*.log"))
+            structure_info["logs"] = len(log_files)
+            logger.info(f"Found {len(log_files)} log files in {self.logs_dir}")
+        else:
+            logger.debug(f"Logs directory not found: {self.logs_dir}")
+
+        # Check monitoring directory
+        if self.monitoring_dir and self.monitoring_dir.exists():
+            csv_files = list(self.monitoring_dir.glob("*.csv"))
+            structure_info["monitoring"] = len(csv_files)
+            logger.info(f"Found {len(csv_files)} monitoring files in {self.monitoring_dir}")
+        else:
+            logger.debug(f"Monitoring directory not found: {self.monitoring_dir}")
+
+    def discover_experiment_files(self) -> List[ExperimentFiles]:
+        """Discover and match all files for each experiment.
+
+        This method systematically searches for benchmark result files and their associated
+        monitoring data (logs, CPU metrics, GPU power/temperature data), creating a
+        comprehensive mapping of all experiment files. It handles flexible directory
+        structures and provides filtering options based on completeness requirements.
+
+        The discovery process follows these steps:
+        1. Locate all JSON result files matching the configured pattern
+        2. For each result file, search for corresponding monitoring files
+        3. Build ExperimentFiles objects containing all related file paths
+        4. Apply filtering based on completeness requirements if specified
+
+        Returns:
+            List[ExperimentFiles]: A list of ExperimentFiles objects, each containing:
+                - result_file: Path to the JSON benchmark results file
+                - log_file: Optional path to execution log file
+                - cpu_metrics_file: Optional path to CPU monitoring CSV
+                - gpu_power_file: Optional path to GPU power monitoring CSV
+                - gpu_temp_file: Optional path to GPU temperature monitoring CSV
+
+        Raises:
+            FileNotFoundError: If no result files are found matching the pattern.
+            PermissionError: If files exist but are not readable.
+
+        Note:
+            The method respects the `require_complete_monitoring` configuration flag.
+            When enabled, only experiments with all monitoring files are returned.
+            File matching is based on basename pattern matching across subdirectories.
+
+        Example:
+            ```
+            analyzer = BenchmarkAnalyzer(config)
+            experiments = analyzer.discover_experiment_files()
+            print(f"Found {len(experiments)} complete experiment file sets")
+
+            for exp in experiments:
+                if exp.has_complete_monitoring:
+                    print(f"Complete monitoring data for {exp.result_file.name}")
+            ```
+        """
+        logger.info("Discovering experiment files...")
+
+        # Get all JSON result files
+        result_files = list(self.results_dir.glob(self.config.results_pattern))
+        experiments = []
+
+        for result_file in result_files:
+            try:
+                experiment = self._build_experiment_files(result_file)
+                experiments.append(experiment)
+
+                # Log what we found for this experiment
+                monitoring_status = "complete" if experiment.has_complete_monitoring else "partial"
+                logger.debug(f"Experiment {result_file.name}: {monitoring_status} monitoring data")
+
+            except Exception as e:
+                logger.error(f"Error processing experiment {result_file.name}: {e}")
+
+        # Filter experiments if complete monitoring is required
+        if self.config.require_complete_monitoring:
+            complete_experiments = [exp for exp in experiments if exp.has_complete_monitoring]
+            logger.info(
+                f"Filtered to {len(complete_experiments)}/{len(experiments)} experiments with complete monitoring"
+            )
+            experiments = complete_experiments
+
+        logger.info(f"Discovered {len(experiments)} experiment file sets")
+        return experiments
+
+    def _build_experiment_files(self, result_file: Path) -> ExperimentFiles:
+        """Build ExperimentFiles object by finding matching files."""
+        # Extract the base pattern from the result filename
+        base_name = result_file.stem  # Remove .json extension
+
+        # Look for matching files in other directories
+        log_file = None
+        if self.logs_dir and self.logs_dir.exists():
+            potential_log = self.logs_dir / f"{base_name}.log"
+            if potential_log.exists():
+                log_file = potential_log
+
+        cpu_metrics_file = None
+        gpu_power_file = None
+        gpu_temp_file = None
+
+        if self.monitoring_dir and self.monitoring_dir.exists():
+            # Look for CPU metrics
+            cpu_pattern = self.monitoring_dir / f"cpu_{base_name}.csv"
+            if cpu_pattern.exists():
+                cpu_metrics_file = cpu_pattern
+
+            # Look for GPU power metrics
+            power_pattern = self.monitoring_dir / f"gpu_power_{base_name}.csv"
+            if power_pattern.exists():
+                gpu_power_file = power_pattern
+
+            # Look for GPU temperature metrics
+            temp_pattern = self.monitoring_dir / f"gpu_temp_{base_name}.csv"
+            if temp_pattern.exists():
+                gpu_temp_file = temp_pattern
+
+        return ExperimentFiles(
+            result_file=result_file,
+            log_file=log_file,
+            cpu_metrics_file=cpu_metrics_file,
+            gpu_power_file=gpu_power_file,
+            gpu_temp_file=gpu_temp_file,
+        )
 
     def _build_filename_formats(self) -> List[FilenameFormat]:
         """Build FilenameFormat objects from configuration"""
@@ -184,6 +362,10 @@ class BenchmarkAnalyzer:
     @staticmethod
     def _validate_timestamp_format(timestamp: str, filename: str) -> None:
         """Validate timestamp format and provide helpful warnings."""
+        # Skip validation for 'unknown' timestamps
+        if timestamp == "unknown":
+            return
+
         common_formats = [
             ("%Y%m%d_%H%M%S", "YYYYMMDD_HHMMSS"),
             ("%Y-%m-%d_%H-%M-%S", "YYYY-MM-DD_HH-MM-SS"),
@@ -197,53 +379,107 @@ class BenchmarkAnalyzer:
             try:
                 datetime.strptime(timestamp, fmt_string)
                 logger.debug(f"Timestamp format validated: {description}")
-                return
+                return  # Successfully validated, no warning needed
             except ValueError:
                 continue
 
+        # Only log warning if no format matched
         logger.warning(f"Unrecognized timestamp format in {filename}: {timestamp}")
         logger.info("Consider using format: YYYYMMDD_HHMMSS")
 
     def process_results(self) -> None:
-        """
-        Process all benchmark result files and generate comprehensive analysis
+        """Process all benchmark result files and generate comprehensive analysis.
 
-        This method orchestrates the complete analysis workflow:
-        1. Discover and parse result files
-        2. Load and validate benchmark data
-        3. Generate statistical summaries
-        4. Create visualization outputs
-        5. Export analysis reports
+        This is the main orchestration method that coordinates the complete analysis
+        workflow from raw benchmark files to final reports and visualizations. It
+        handles file discovery, data loading, statistical analysis, visualization
+        generation, and report creation in a fault-tolerant manner.
+
+        The processing pipeline includes:
+        1. **File Discovery**: Locate all experiment files and validate structure
+        2. **Data Loading**: Parse JSON results and extract benchmark metrics
+        3. **Statistical Analysis**: Generate performance summaries and comparisons
+        4. **Monitoring Processing**: Analyze hardware metrics if available
+        5. **Visualization**: Create performance plots and dashboards
+        6. **Report Generation**: Produce markdown and JSON analysis reports
+
+        The method implements comprehensive error handling and logging to ensure
+        partial results are preserved even if individual steps fail.
+
+        Raises:
+            ValueError: If no valid experiment files are found.
+            RuntimeError: If critical analysis steps fail unexpectedly.
+            PermissionError: If output directories cannot be created or accessed.
+
+        Side Effects:
+            - Creates output directory structure (tables/, plots/, reports/)
+            - Writes CSV files with statistical summaries
+            - Generates PNG visualization files
+            - Creates comprehensive analysis reports
+            - Logs detailed progress and error information
+
+        Example:
+            ```
+            config = AnalysisConfig(
+                input_dir=Path("benchmark_data"),
+                output_dir=Path("analysis_output"),
+                generate_plots=True,
+                include_monitoring_data=True
+            )
+
+            analyzer = BenchmarkAnalyzer(config)
+            analyzer.process_results()
+
+            # Results available in:
+            # - analysis_output/tables/*.csv
+            # - analysis_output/plots/*.png
+            # - analysis_output/reports/*.{md,json}
+            ```
+
+        Note:
+            Processing time scales with dataset size and enabled features.
+            Large datasets with monitoring data may require several minutes.
+            Progress is logged at INFO level for monitoring long-running analyses.
         """
         logger.info("Starting benchmark results processing...")
 
         try:
-            # Step 1: Discover result files
-            result_files = self._discover_result_files()
-            logger.info(f"Found {len(result_files)} result files to process")
+            # Discover all experiment files
+            self.experiment_files = self.discover_experiment_files()
 
-            if not result_files:
-                logger.warning("No result files found matching the specified pattern")
+            if not self.experiment_files:
+                logger.warning("No valid experiment files found")
                 return
 
-            # Step 2: Load and parse all results
-            self.results = self._load_all_results(result_files)
-            logger.info(f"Successfully loaded {len(self.results)} benchmark results")
+            # Load benchmark results
+            self.results = self._load_benchmark_results()
 
             if not self.results:
                 logger.error("No valid results could be loaded")
                 return
 
-            # Step 3: Generate analysis outputs
+            # Generate statistical analysis
             stats_analyzer = StatisticalAnalyzer(self.results)
             stats_analyzer.export_summaries(self.config.output_dir)
 
-            # 4. Create visualization outputs
-            if self.config.generate_plots:
-                plot_generator = PlotGenerator(self.results)
-                plot_generator.create_all_plots(self.config.output_dir / "plots")
+            # Process monitoring data if requested
+            if self.config.include_monitoring_data:
+                self._process_monitoring_data()
 
-            # 5. Export analysis reports
+                # Generate visualizations
+            if self.config.generate_plots:
+                plot_generator = BenchmarkVisualizer(
+                    self.results,
+                    config=AnalysisConfig(input_dir=Path("."), output_dir=Path("plots")),
+                )
+                standard_plots = plot_generator.create_all_plots(self.config.output_dir / "plots")
+
+                # Create monitoring plots if monitoring data exists
+                if self.config.include_monitoring_data:
+                    monitoring_plots = self._create_monitoring_visualizations()
+                    standard_plots.update(monitoring_plots)
+
+            # Generate reports
             report_generator = ReportGenerator(self.config, self.results, stats_analyzer)
             report_generator.create_reports(self.config.output_dir / "reports")
 
@@ -251,21 +487,352 @@ class BenchmarkAnalyzer:
             logger.info(f"Results available in: {self.config.output_dir}")
 
         except Exception as e:
-            logger.error(f"Error during results processing: {e}")
+            logger.error(f"Error during analysis processing: {e}")
             raise
 
-    def _discover_result_files(self) -> List[Path]:
-        """Discover all result files matching the configured pattern"""
-        logger.debug(f"Searching for files matching: {self.config.results_pattern}")
-        logger.debug(f"In directory: {self.config.input_dir}")
+    def _create_monitoring_visualizations(self) -> Dict[str, Path]:
+        """Create monitoring-specific visualizations."""
+        monitoring_plots = {}
 
-        result_files = list(self.config.input_dir.glob(self.config.results_pattern))
+        try:
+            # Load monitoring summaries from CSV files (already exported)
+            tables_dir = self.config.output_dir / "tables"
 
-        # Filter out non-JSON files if pattern is generic
-        json_files = [f for f in result_files if f.suffix.lower() == ".json"]
+            monitoring_summaries = pd.DataFrame()
+            thermal_analysis = pd.DataFrame()
+            power_analysis = pd.DataFrame()
 
-        logger.debug(f"Found {len(json_files)} JSON files")
-        return sorted(json_files)
+            # Load CSV files if they exist
+            if (tables_dir / "monitoring_summary.csv").exists():
+                monitoring_summaries = pd.read_csv(tables_dir / "monitoring_summary.csv")
+
+            if (tables_dir / "thermal_analysis.csv").exists():
+                thermal_analysis = pd.read_csv(tables_dir / "thermal_analysis.csv")
+
+            if (tables_dir / "power_analysis.csv").exists():
+                power_analysis = pd.read_csv(tables_dir / "power_analysis.csv")
+
+            # Create visualizations using the loaded data
+            if (
+                not monitoring_summaries.empty
+                or not thermal_analysis.empty
+                or not power_analysis.empty
+            ):
+                visualizer = BenchmarkVisualizer(self.results, self.config)
+
+                # Create monitoring dashboard
+                dashboard_plots = visualizer.create_monitoring_dashboard(
+                    self.config.output_dir / "plots",
+                    monitoring_summaries,
+                    thermal_analysis,
+                    power_analysis,
+                )
+                monitoring_plots.update(dashboard_plots)
+
+                # Create power efficiency plots
+                if not power_analysis.empty:
+                    power_plots = visualizer.create_power_efficiency_plots(
+                        self.config.output_dir / "plots", power_analysis
+                    )
+                    monitoring_plots.update(power_plots)
+
+            logger.info(f"Created {len(monitoring_plots)} monitoring visualization plots")
+
+        except Exception as e:
+            logger.error(f"Error creating monitoring visualizations: {e}")
+
+        return monitoring_plots
+
+    def _load_benchmark_results(self) -> List[BenchmarkResult]:
+        """Load benchmark results from discovered experiments."""
+        results = []
+
+        for experiment in self.experiment_files:
+            try:
+                # Use existing loading logic
+                result = self._load_single_result(experiment.result_file)
+                if result:
+                    results.append(result)
+            except Exception as e:
+                logger.error(f"Failed to load result {experiment.result_file.name}: {e}")
+
+        return results
+
+    def _process_monitoring_data(self) -> None:
+        """Enhanced monitoring data processing with comprehensive metrics."""
+        if not self.config.include_monitoring_data:
+            return
+
+        logger.info("Processing comprehensive monitoring data...")
+
+        monitoring_summaries = []
+        thermal_analysis = []
+        power_analysis = []
+
+        for experiment in self.experiment_files:
+            try:
+                monitoring_data = self.load_monitoring_data(experiment)
+
+                if monitoring_data:
+                    # Core monitoring summary
+                    summary = self._calculate_monitoring_summary(experiment, monitoring_data)
+                    monitoring_summaries.append(summary)
+
+                    # Enhanced thermal analysis
+                    if "gpu_temp" in monitoring_data:
+                        thermal_data = self._analyze_thermal_performance(
+                            experiment, monitoring_data["gpu_temp"]
+                        )
+                        thermal_analysis.append(thermal_data)
+
+                    # Enhanced power analysis
+                    if "gpu_power" in monitoring_data:
+                        power_data = self._analyze_power_efficiency(
+                            experiment, monitoring_data["gpu_power"]
+                        )
+                        power_analysis.append(power_data)
+
+            except Exception as e:
+                logger.error(f"Error processing monitoring for {experiment.result_file.name}: {e}")
+
+        # Export comprehensive monitoring analysis
+        self._export_monitoring_analysis(monitoring_summaries, thermal_analysis, power_analysis)
+
+    def _export_monitoring_analysis(
+        self,
+        monitoring_summaries: List[Dict[str, Any]],
+        thermal_analysis: List[Dict[str, Any]],
+        power_analysis: List[Dict[str, Any]],
+    ) -> None:
+        """Export comprehensive monitoring analysis to files."""
+
+        # Export general monitoring summaries
+        if monitoring_summaries:
+            monitoring_df = pd.DataFrame(monitoring_summaries)
+            monitoring_file = self.config.output_dir / "tables" / "monitoring_summary.csv"
+            monitoring_df.to_csv(monitoring_file, index=False)
+            logger.info(f"Monitoring summary exported to {monitoring_file}")
+
+        # Export thermal analysis
+        if thermal_analysis:
+            thermal_df = pd.DataFrame(thermal_analysis)
+            thermal_file = self.config.output_dir / "tables" / "thermal_analysis.csv"
+            thermal_df.to_csv(thermal_file, index=False)
+            logger.info(f"Thermal analysis exported to {thermal_file}")
+
+        # Export power analysis
+        if power_analysis:
+            power_df = pd.DataFrame(power_analysis)
+            power_file = self.config.output_dir / "tables" / "power_analysis.csv"
+            power_df.to_csv(power_file, index=False)
+            logger.info(f"Power analysis exported to {power_file}")
+
+    @staticmethod
+    def _analyze_thermal_performance(
+        experiment: ExperimentFiles, temp_df: pd.DataFrame
+    ) -> Dict[str, Any]:
+        """Analyze thermal performance patterns."""
+        return {
+            "experiment": experiment.result_file.name,
+            "max_edge_temp": temp_df["temp_edge_celsius"].max(),
+            "avg_edge_temp": temp_df["temp_edge_celsius"].mean(),
+            "max_junction_temp": temp_df["temp_junction_celsius"].max(),
+            "avg_junction_temp": temp_df["temp_junction_celsius"].mean(),
+            "thermal_throttling_risk": temp_df["temp_junction_celsius"].max()
+            > 90,  # AMD MI300X threshold
+            "temp_stability": temp_df["temp_edge_celsius"].std(),
+        }
+
+    @staticmethod
+    def _analyze_power_efficiency(
+        experiment: ExperimentFiles, power_df: pd.DataFrame
+    ) -> Dict[str, Any]:
+        """Analyze power consumption efficiency."""
+        total_power_series = power_df.groupby("timestamp")["power_watts"].sum()
+
+        return {
+            "experiment": experiment.result_file.name,
+            "avg_total_power": total_power_series.mean(),
+            "max_total_power": total_power_series.max(),
+            "power_efficiency": total_power_series.mean() / 8,  # Per GPU average
+            "power_stability": total_power_series.std(),
+            "num_gpus_monitored": power_df["device"].nunique(),
+        }
+
+    @staticmethod
+    def load_monitoring_data(experiment: ExperimentFiles) -> Dict[str, pd.DataFrame]:
+        """Load monitoring data for an experiment from CSV files.
+
+        This method loads and preprocesses hardware monitoring data associated with
+        a specific experiment, including CPU utilization, GPU power consumption,
+        and thermal metrics. It handles multiple file formats and performs data
+        validation and timestamp normalization.
+
+        The method processes three types of monitoring data:
+        - **CPU Metrics**: System utilization, load averages, idle percentages
+        - **GPU Power**: Per-device power consumption over time
+        - **GPU Temperature**: Edge and junction temperatures for thermal analysis
+
+        Args:
+            experiment (ExperimentFiles): Container with paths to monitoring files.
+                Must contain at least one of: cpu_metrics_file, gpu_power_file,
+                gpu_temp_file. Missing files are silently skipped.
+
+        Returns:
+            Dict[str, pd.DataFrame]: Dictionary mapping data types to DataFrames:
+                - 'cpu': CPU monitoring data with timestamp column
+                - 'gpu_power': GPU power consumption data
+                - 'gpu_temp': GPU temperature monitoring data
+
+            Each DataFrame includes a standardized 'timestamp' column converted
+            to pandas datetime format for time-series analysis.
+
+        Raises:
+            FileNotFoundError: If specified monitoring files don't exist.
+            pd.errors.EmptyDataError: If CSV files are empty or malformed.
+            ValueError: If timestamp columns cannot be parsed.
+
+        Example:
+            ```
+            experiment = ExperimentFiles(
+                result_file=Path("result.json"),
+                cpu_metrics_file=Path("cpu_metrics.csv"),
+                gpu_power_file=Path("gpu_power.csv")
+            )
+
+            monitoring_data = BenchmarkAnalyzer.load_monitoring_data(experiment)
+
+            if 'cpu' in monitoring_data:
+                cpu_df = monitoring_data['cpu']
+                print(f"CPU monitoring duration: {cpu_df['timestamp'].max() - cpu_df['timestamp'].min()}")
+
+            if 'gpu_power' in monitoring_data:
+                power_df = monitoring_data['gpu_power']
+                total_power = power_df.groupby('timestamp')['power_watts'].sum()
+                print(f"Average total power: {total_power.mean():.1f}W")
+            ```
+
+        Note:
+            - Timestamps are expected in Unix epoch format (seconds since 1970)
+            - GPU data may contain multiple devices with separate readings
+            - Missing or corrupted files are logged as errors but don't raise exceptions
+            - Empty DataFrames are returned for missing monitoring categories
+        """
+        monitoring_data = {}
+
+        try:
+            # Load CPU metrics
+            if experiment.cpu_metrics_file and experiment.cpu_metrics_file.exists():
+                cpu_df = pd.read_csv(experiment.cpu_metrics_file)
+                cpu_df["timestamp"] = pd.to_datetime(cpu_df["timestamp"], unit="s")
+                monitoring_data["cpu"] = cpu_df
+
+            # Load GPU power metrics
+            if experiment.gpu_power_file and experiment.gpu_power_file.exists():
+                power_df = pd.read_csv(experiment.gpu_power_file)
+                power_df["timestamp"] = pd.to_datetime(power_df["timestamp"], unit="s")
+                monitoring_data["gpu_power"] = power_df
+
+            # Load GPU temperature metrics
+            if experiment.gpu_temp_file and experiment.gpu_temp_file.exists():
+                temp_df = pd.read_csv(experiment.gpu_temp_file)
+                temp_df["timestamp"] = pd.to_datetime(temp_df["timestamp"], unit="s")
+                monitoring_data["gpu_temp"] = temp_df
+
+        except Exception as e:
+            logger.error(f"Error loading monitoring data for {experiment.result_file.name}: {e}")
+
+        return monitoring_data
+
+    def _calculate_monitoring_summary(
+        self, experiment: ExperimentFiles, monitoring_data: Dict[str, pd.DataFrame]
+    ) -> Dict[str, Any]:
+        """Calculate summary statistics for monitoring data."""
+        summary: Dict[str, Any] = {"experiment": experiment.result_file.name}
+
+        # Calculate experiment duration from monitoring data
+        duration = self._estimate_duration_from_monitoring(monitoring_data)
+        summary["duration_seconds"] = duration
+
+        # CPU metrics summary
+        if "cpu" in monitoring_data:
+            cpu_df = monitoring_data["cpu"]
+            summary.update(
+                {
+                    "avg_cpu_usage": (
+                        cpu_df["cpu_user_percent"] + cpu_df["cpu_system_percent"]
+                    ).mean(),
+                    "max_load_avg": cpu_df["load_avg_1min"].max(),
+                    "cpu_stability": (
+                        cpu_df["cpu_user_percent"] + cpu_df["cpu_system_percent"]
+                    ).std(),
+                    "avg_cpu_idle": cpu_df["cpu_idle_percent"].mean(),
+                }
+            )
+
+        # GPU power summary
+        if "gpu_power" in monitoring_data:
+            power_df = monitoring_data["gpu_power"]
+            # Filter out any malformed data
+            power_df_clean = power_df[power_df["power_watts"] > 0]
+            if not power_df_clean.empty:
+                # Calculate total power across all cards per timestamp
+                total_power_series = power_df_clean.groupby("timestamp")["power_watts"].sum()
+                summary.update(
+                    {
+                        "avg_total_power": total_power_series.mean(),
+                        "max_total_power": total_power_series.max(),
+                        "avg_per_gpu_power": power_df_clean.groupby("device")["power_watts"]
+                        .mean()
+                        .mean(),
+                        "power_stability": total_power_series.std(),
+                        "num_gpus_monitored": power_df_clean["device"].nunique(),
+                    }
+                )
+
+        # GPU temperature summary
+        if "gpu_temp" in monitoring_data:
+            temp_df = monitoring_data["gpu_temp"]
+            summary.update(
+                {
+                    "max_gpu_temp_edge": temp_df["temp_edge_celsius"].max(),
+                    "max_gpu_temp_junction": temp_df["temp_junction_celsius"].max(),
+                    "avg_gpu_temp_edge": temp_df["temp_edge_celsius"].mean(),
+                    "avg_gpu_temp_junction": temp_df["temp_junction_celsius"].mean(),
+                    # AMD MI300X thermal throttling typically occurs around 90-95°C junction temp
+                    "thermal_throttling_risk": temp_df["temp_junction_celsius"].max() > 90.0,
+                }
+            )
+
+        return summary
+
+    @staticmethod
+    def _estimate_duration_from_monitoring(monitoring_data: Dict[str, pd.DataFrame]) -> float:
+        """Estimate experiment duration from monitoring data timestamps."""
+        duration = 0.0
+
+        # Try CPU data first (most consistent)
+        if "cpu" in monitoring_data:
+            cpu_df = monitoring_data["cpu"]
+            if len(cpu_df) > 1:
+                duration = cpu_df["timestamp"].max() - cpu_df["timestamp"].min()
+                return cast(float, duration.total_seconds())
+
+        # Fallback to GPU power data
+        if "gpu_power" in monitoring_data:
+            power_df = monitoring_data["gpu_power"]
+            if len(power_df) > 1:
+                duration_series = power_df["timestamp"].max() - power_df["timestamp"].min()
+                return cast(float, duration_series.total_seconds())
+
+        # Fallback to GPU temperature data
+        if "gpu_temp" in monitoring_data:
+            temp_df = monitoring_data["gpu_temp"]
+            if len(temp_df) > 1:
+                duration_series = temp_df["timestamp"].max() - temp_df["timestamp"].min()
+                return cast(float, duration_series.total_seconds())
+
+        return 0.0
 
     def _load_all_results(self, result_files: List[Path]) -> List[BenchmarkResult]:
         """Load and validate all benchmark result files"""

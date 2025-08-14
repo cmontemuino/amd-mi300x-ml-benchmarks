@@ -340,18 +340,18 @@ class ReportGenerator:
 
             file.write(f"- **Average Operating Temperature**: {avg_edge_temp:.1f}°C (edge)\n")
             thermal_note = (
-                "**No thermal throttling events across all tests** ✅\n\n"
+                "**No thermal throttling events across all tests** ✅"
                 if thermal_risk_count == 0
-                else f"**Thermal Throttling Events**: {thermal_risk_count} out of {len(thermal_analysis)} experiments ⚠️\n\n"
+                else f"**Thermal Throttling Events**: {thermal_risk_count} out of {len(thermal_analysis)} experiments ⚠️"
             )
             file.write(f"- {thermal_note}\n")
 
             std_temp_stability = thermal_analysis["temp_stability"].std()
-            file.write(f"- **Temperature stability**: {std_temp_stability:.1f}°C\n")
+            file.write(f"- **Temperature stability**: {std_temp_stability:.1f}°C\n\n")
 
             file.write(
                 """> **Note**: Edge vs. junction temperatures are different sensors. Junction temperature is
-            typically 5-15°C higher than edge temperature and is the critical metric for throttling decisions.\n"""
+            typically 5-15°C higher than edge temperature and is the critical metric for throttling decisions.\n\n"""
             )
 
         # System stability from monitoring summaries

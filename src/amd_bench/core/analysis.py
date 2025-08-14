@@ -462,11 +462,10 @@ class BenchmarkAnalyzer:
             stats_analyzer = StatisticalAnalyzer(self.results)
             stats_analyzer.export_summaries(self.config.output_dir)
 
-            # Process monitoring data if requested
-            if self.config.include_monitoring_data:
-                self._process_monitoring_data()
+            # Process monitoring data
+            monitoring_dataframes = self._process_monitoring_data()
 
-                # Generate visualizations
+            # Generate visualizations
             if self.config.generate_plots:
                 plot_generator = BenchmarkVisualizer(
                     self.results,
@@ -476,9 +475,9 @@ class BenchmarkAnalyzer:
                 )
                 standard_plots = plot_generator.create_all_plots(self.config.output_dir / "plots")
 
-                # Create monitoring plots if monitoring data exists
-                if self.config.include_monitoring_data:
-                    monitoring_plots = self._create_monitoring_visualizations()
+                # Create monitoring plots with in-memory data
+                if monitoring_dataframes:
+                    monitoring_plots = self._create_monitoring_visualizations(monitoring_dataframes)
                     standard_plots.update(monitoring_plots)
 
             # Generate reports
@@ -492,27 +491,17 @@ class BenchmarkAnalyzer:
             logger.error(f"Error during analysis processing: {e}")
             raise
 
-    def _create_monitoring_visualizations(self) -> Dict[str, Path]:
+    def _create_monitoring_visualizations(
+        self, monitoring_dataframes: Dict[str, pd.DataFrame]
+    ) -> Dict[str, Path]:
         """Create monitoring-specific visualizations."""
         monitoring_plots = {}
 
         try:
-            # Load monitoring summaries from CSV files (already exported)
-            tables_dir = self.config.output_dir / "tables"
-
-            monitoring_summaries = pd.DataFrame()
-            thermal_analysis = pd.DataFrame()
-            power_analysis = pd.DataFrame()
-
-            # Load CSV files if they exist
-            if (tables_dir / "monitoring_summary.csv").exists():
-                monitoring_summaries = pd.read_csv(tables_dir / "monitoring_summary.csv")
-
-            if (tables_dir / "thermal_analysis.csv").exists():
-                thermal_analysis = pd.read_csv(tables_dir / "thermal_analysis.csv")
-
-            if (tables_dir / "power_analysis.csv").exists():
-                power_analysis = pd.read_csv(tables_dir / "power_analysis.csv")
+            # Extract monitoring data directly from the passed DataFrames
+            monitoring_summaries = monitoring_dataframes.get("monitoring_summary", pd.DataFrame())
+            thermal_analysis = monitoring_dataframes.get("thermal_analysis", pd.DataFrame())
+            power_analysis = monitoring_dataframes.get("power_analysis", pd.DataFrame())
 
             # Create visualizations using the loaded data
             if (
@@ -560,16 +549,17 @@ class BenchmarkAnalyzer:
 
         return results
 
-    def _process_monitoring_data(self) -> None:
+    def _process_monitoring_data(self) -> Dict[str, pd.DataFrame]:
         """Enhanced monitoring data processing with comprehensive metrics."""
         if not self.config.include_monitoring_data:
-            return
+            return {}
 
         logger.info("Processing comprehensive monitoring data...")
 
         monitoring_summaries = []
         thermal_analysis = []
         power_analysis = []
+        monitoring_data = {}
 
         for experiment in self.experiment_files:
             try:
@@ -599,6 +589,8 @@ class BenchmarkAnalyzer:
 
         # Export comprehensive monitoring analysis
         self._export_monitoring_analysis(monitoring_summaries, thermal_analysis, power_analysis)
+
+        return monitoring_data
 
     def _export_monitoring_analysis(
         self,

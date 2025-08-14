@@ -295,8 +295,9 @@ class ReportGenerator:
             power_stability = power_analysis["power_stability"].std()
 
             file.write("### Power Consumption Analysis\n\n")
+            num_gpus = int(power_analysis["num_gpus_monitored"].max())
             file.write(
-                f"- **Average Total Power Consumption**: {avg_power:.1f}W across 8x MI300X GPUs\n"
+                f"- **Average Total Power Consumption**: {avg_power:.1f}W across {num_gpus}x MI300X GPUs\n"
             )
             file.write(f"  - **Peak Power Draw**: {max_power:.1f}W\n")
             file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency:.1f}W\n")

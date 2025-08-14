@@ -1,17 +1,30 @@
-# Sample Dataset for AMD MI300X Benchmarks
+# Sample AMD MI300X Benchmark Data
 
-This directory contains sample benchmark results for testing and demonstration purposes.
+This directory contains representative samples of AMD MI300X benchmark data demonstrating the complete experimental pipeline.
 
-## Contents
+## Data Structure
 
-### `sample-results/containerized/`
+```text
+sample-results/
+├── containerized/ # JSON benchmark results (4 experiments)
+├── logs/ # Execution logs (5 files)
+└── monitoring/ # Hardware monitoring CSV files (20 files)
+```
 
-Contains benchmark results from vLLM inference tests on AMD MI300X hardware:
+## Experimental Design
 
-- **Models tested**: DialoGPT-medium, Llama-3.1-8B-Instruct
-- **Benchmark types**: Latency optimization
-- **Configurations**: Various batch sizes, memory utilizations
-- **Hardware**: Dell PowerEdge XE9680 with AMD MI300X GPUs
+**Model**: Llama-3.1-8B (representative 8B parameter model)  
+**Benchmark Type**: Latency-focused inference  
+**Parameter Variations**:
+- **Batch Size**: 1 (latency-optimized) vs 8 (throughput-focused)
+- **Memory Utilization**: 0.8 vs 0.9 (resource efficiency study)
+- **Data Type**: float16 (production standard)
+
+## Hardware Context
+
+- **Platform**: Dell PowerEdge XE9680 with 8× AMD MI300X GPUs
+- **Container**: vLLM inference framework
+- **Monitoring**: Comprehensive system metrics (CPU, GPU power/temp/usage, memory)
 
 ### File Naming Convention
 
@@ -23,18 +36,22 @@ Files follow the pattern:
 
 Examples:
 - `Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.json`
-- `DialoGPT-medium_latency_bs1_in128_out128_float16_mem0.8_20250807_184434.json`
 
-### Sample Data Statistics
+## Complete Dataset
 
-- **Total files**: 13 JSON files
-- **Date range**: August 7, 2025
-- **Batch sizes**: 1, 8, 32
-- **Input/Output lengths**: 128, 1024 tokens
-- **Memory utilizations**: 0.8, 0.9
-- **Data type**: float16
+This is a small subset for testing. The complete research dataset is available at:
 
-## Usage
+👉 [**https://github.com/cmontemuino/amd-mi300x-research-data**](https://github.com/cmontemuino/amd-mi300x-research-data)
+
+The complete dataset includes:
+- Additional models (Llama-3.1-70B, Mistral, Qwen)
+- Throughput benchmarks
+- Hardware monitoring data
+- Power consumption metrics
+- Multi-GPU configurations
+
+
+## Usage Example
 
 ### Quick Start
 
@@ -51,41 +68,4 @@ analyzer = sample_dataset_example()
 
 ```shell
 analyze-results run --input-dir datasets/sample-results --output-dir analysis/sample-output
-```
-
-#### Use YAML configuration
-
-```shell
-analyze-results run --config-file datasets/configs/sample-analysis.yaml
-```
-
-## Complete Dataset
-
-This is a small subset for testing. The complete research dataset is available at:
-[**https://github.com/cmontemuino/amd-mi300x-research-data**](https://github.com/cmontemuino/amd-mi300x-research-data)
-
-The complete dataset includes:
-- Additional models (Llama-3.1-70B, Mistral, Qwen)
-- Throughput benchmarks
-- Hardware monitoring data
-- Power consumption metrics
-- Multi-GPU configurations
-
-## Data Schema
-
-Each JSON file contains:
-
-```json
-{
-    "avg_latency": 0.7171628322103061,
-    "latencies": [0.717713778023608, ...],
-    "percentiles": {
-        "10": 0.716384768707212,
-        "25": 0.7165017670486122,
-        "50": 0.7168599735596217,
-        "75": 0.7176406020007562,
-        "90": 0.7181383826304227,
-        "99": 0.7188986453670076
-    }
-}
 ```

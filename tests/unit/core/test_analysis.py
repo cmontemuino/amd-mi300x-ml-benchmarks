@@ -21,6 +21,21 @@ class TestBenchmarkAnalyzerInstanceMethods:
             input_dir = temp_path / "input"
             output_dir = temp_path / "output"
             input_dir.mkdir()
+
+            # Create containerized subdirectory with test files
+            containerized_dir = input_dir / "containerized"
+            containerized_dir.mkdir()
+
+            # Create sample JSON files
+            (containerized_dir / "test_file.json").write_text(
+                '{"avg_latency": 1.0, "latencies": [1.0]}'
+            )
+            (
+                containerized_dir / "llama3_latency_bs1_in128_out128_float16_mem0.8_20240812.json"
+            ).write_text(
+                '{"avg_latency": 0.5, "latencies": [0.5, 0.6], "percentiles": {"50": 0.5, "90": 0.6, "95": 0.65, "99": 0.7}}'
+            )
+
             yield input_dir, output_dir
 
     @pytest.fixture
@@ -30,7 +45,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
         return AnalysisConfig(input_dir=input_dir, output_dir=output_dir)
 
     @pytest.fixture
-    def custom_config(self, temp_dirs):
+    def custom_config(self, temp_dirs) -> AnalysisConfig:
         """Custom AnalysisConfig with custom formats"""
         input_dir, output_dir = temp_dirs
         return AnalysisConfig(
@@ -66,7 +81,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert len(analyzer.filename_formats) == 2  # Default formats
             assert analyzer.config.output_dir.exists()
 
-        def test_custom_initialization(self, custom_config):
+        def test_custom_initialization(self, custom_config) -> None:
             """Test analyzer initialization with custom config"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -117,7 +132,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
         """Test _setup_output_directories method"""
 
         @patch("amd_bench.core.analysis.ensure_directory")
-        def test_setup_output_directories(self, mock_ensure_dir, basic_config):
+        def test_setup_output_directories(
+            self, mock_ensure_dir, basic_config: AnalysisConfig
+        ) -> None:
             """Test output directory setup"""
             BenchmarkAnalyzer(basic_config)
 
@@ -136,7 +153,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
     class TestParseExperimentFilename:
         """Test _parse_experiment_filename method"""
 
-        def test_parse_filename_with_matching_pattern(self, custom_config):
+        def test_parse_filename_with_matching_pattern(self, custom_config: AnalysisConfig) -> None:
             """Test parsing filename that matches a pattern"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -147,7 +164,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["batch_size"] == "32"
             assert result["timestamp"] == "20240812_1430"
 
-        def test_parse_filename_with_multiple_patterns(self, custom_config):
+        def test_parse_filename_with_multiple_patterns(self, custom_config: AnalysisConfig) -> None:
             """Test that higher priority patterns are matched first"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -160,7 +177,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["batch_size"] == "16"
 
         @patch("amd_bench.core.analysis.logger")
-        def test_parse_filename_no_match(self, mock_logger, custom_config):
+        def test_parse_filename_no_match(self, mock_logger, custom_config: AnalysisConfig) -> None:
             """Test parsing filename that doesn't match any pattern"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -174,7 +191,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             # Should log warning
             mock_logger.warning.assert_called()
 
-        def test_parse_absolute_path(self, custom_config):
+        def test_parse_absolute_path(self, custom_config: AnalysisConfig) -> None:
             """Test parsing with absolute path"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -187,7 +204,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
     class TestExtractParametersFromMatch:
         """Test _extract_parameters_from_match method"""
 
-        def test_extract_parameters_success(self, custom_config):
+        def test_extract_parameters_success(self, custom_config: AnalysisConfig) -> None:
             """Test successful parameter extraction"""
             import re
 
@@ -204,7 +221,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["batch_size"] == "32"  # Should be sanitized (numeric_only)
             assert result["timestamp"] == "20240812"
 
-        def test_extract_parameters_with_sanitization(self, custom_config):
+        def test_extract_parameters_with_sanitization(self, custom_config: AnalysisConfig) -> None:
             """Test parameter extraction with sanitization"""
             import re
 
@@ -224,7 +241,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["model"] == "model"
             assert result["timestamp"] == "timestamp"
 
-        def test_extract_parameters_with_sanitization_complex(self, custom_config):
+        def test_extract_parameters_with_sanitization_complex(
+            self, custom_config: AnalysisConfig
+        ) -> None:
             """Test parameter extraction with complex sanitization needs"""
             import re
 
@@ -247,7 +266,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["batch_size"] == "32"
 
         @patch("amd_bench.core.analysis.logger")
-        def test_extract_parameters_with_error(self, mock_logger, custom_config):
+        def test_extract_parameters_with_error(
+            self, mock_logger, custom_config: AnalysisConfig
+        ) -> None:
             """Test parameter extraction with errors"""
             analyzer = BenchmarkAnalyzer(custom_config)
             format_config = analyzer.filename_formats[0]
@@ -257,7 +278,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             mock_match.groups.return_value = ("group1", "group2", "group3")  # Return some groups
 
             # Make group() method raise IndexError when called with valid indices
-            def side_effect(group_idx):
+            def side_effect(group_idx) -> str:
                 if group_idx <= 3:  # This should match the groups in format_config
                     raise IndexError(f"Invalid group index: {group_idx}")
                 return "default"
@@ -274,7 +295,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
             mock_logger.error.assert_called()
 
         @patch("amd_bench.core.analysis.logger")
-        def test_extract_parameters_with_none_match(self, mock_logger, custom_config):
+        def test_extract_parameters_with_none_match(
+            self, mock_logger, custom_config: AnalysisConfig
+        ) -> None:
             """Test parameter extraction when match is None"""
             analyzer = BenchmarkAnalyzer(custom_config)
             format_config = analyzer.filename_formats[0]
@@ -290,21 +313,21 @@ class TestBenchmarkAnalyzerInstanceMethods:
     class TestSanitizeParameterValueFromConfig:
         """Test _sanitize_parameter_value_from_config method"""
 
-        def test_decimal_separator_sanitization(self, custom_config):
+        def test_decimal_separator_sanitization(self, custom_config: AnalysisConfig) -> None:
             """Test decimal separator sanitization"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
             result = analyzer._sanitize_parameter_value_from_config("memory_util", "0,95")
             assert result == "0.95"
 
-        def test_numeric_only_sanitization(self, custom_config):
+        def test_numeric_only_sanitization(self, custom_config: AnalysisConfig) -> None:
             """Test numeric only sanitization"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
             result = analyzer._sanitize_parameter_value_from_config("batch_size", "32tokens")
             assert result == "32"
 
-        def test_no_sanitization(self, custom_config):
+        def test_no_sanitization(self, custom_config: AnalysisConfig) -> None:
             """Test fields without specific sanitization"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -314,7 +337,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
     class TestGetDefaultParametersFromConfig:
         """Test _get_default_parameters_from_config method"""
 
-        def test_get_defaults_with_custom_config(self, custom_config):
+        def test_get_defaults_with_custom_config(self, custom_config: AnalysisConfig) -> None:
             """Test getting defaults from custom configuration"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -324,7 +347,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert result["benchmark_type"] == "test_benchmark"
             assert result["model"] == "test_filename"  # Should override with filename
 
-        def test_get_defaults_preserves_config(self, custom_config):
+        def test_get_defaults_preserves_config(self, custom_config: AnalysisConfig) -> None:
             """Test that getting defaults doesn't modify original config"""
             analyzer = BenchmarkAnalyzer(custom_config)
 
@@ -339,7 +362,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
         """Test _validate_extracted_parameters method"""
 
         @patch("amd_bench.core.analysis.logger")
-        def test_validate_parameters_success(self, mock_logger, basic_config):
+        def test_validate_parameters_success(
+            self, mock_logger, basic_config: AnalysisConfig
+        ) -> None:
             """Test successful parameter validation"""
             analyzer = BenchmarkAnalyzer(basic_config)
 
@@ -359,7 +384,9 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert len(warning_calls) == 0
 
         @patch("amd_bench.core.analysis.logger")
-        def test_validate_parameters_with_warnings(self, mock_logger, basic_config):
+        def test_validate_parameters_with_warnings(
+            self, mock_logger, basic_config: AnalysisConfig
+        ) -> None:
             """Test parameter validation with warnings"""
             analyzer = BenchmarkAnalyzer(basic_config)
 
@@ -375,7 +402,7 @@ class TestBenchmarkAnalyzerInstanceMethods:
             assert mock_logger.warning.call_count >= 2
 
         @patch("amd_bench.core.analysis.logger")
-        def test_validate_empty_parameters(self, mock_logger, basic_config):
+        def test_validate_empty_parameters(self, basic_config: AnalysisConfig) -> None:
             """Test validation with empty parameters"""
             analyzer = BenchmarkAnalyzer(basic_config)
 
@@ -389,7 +416,7 @@ class TestBenchmarkAnalyzerStaticMethods:
     class TestGetDefaultParameters:
         """Test _get_default_parameters static method"""
 
-        def test_basic_filename(self):
+        def test_basic_filename(self) -> None:
             """Test with basic filename"""
             result = BenchmarkAnalyzer._get_default_parameters("test_file")
 
@@ -406,21 +433,21 @@ class TestBenchmarkAnalyzerStaticMethods:
 
             assert result == expected
 
-        def test_complex_filename(self):
+        def test_complex_filename(self) -> None:
             """Test with complex filename containing underscores"""
             result = BenchmarkAnalyzer._get_default_parameters("llama3-8b_complex_name")
 
             assert result["model"] == "llama3-8b_complex_name"
             assert result["benchmark_type"] == "unknown"
 
-        def test_empty_filename(self):
+        def test_empty_filename(self) -> None:
             """Test with empty filename"""
             result = BenchmarkAnalyzer._get_default_parameters("")
 
             assert result["model"] == ""
             assert result["benchmark_type"] == "unknown"
 
-        def test_returned_keys_completeness(self):
+        def test_returned_keys_completeness(self) -> None:
             """Test that all required keys are present"""
             result = BenchmarkAnalyzer._get_default_parameters("tests")
 
@@ -440,18 +467,18 @@ class TestBenchmarkAnalyzerStaticMethods:
     class TestSanitizeParameterValue:
         """Test _sanitize_parameter_value static method"""
 
-        def test_memory_util_comma_replacement(self):
+        def test_memory_util_comma_replacement(self) -> None:
             """Test memory_util comma to dot replacement"""
             result = BenchmarkAnalyzer._sanitize_parameter_value("memory_util", "0,95")
             assert result == "0.95"
 
         @pytest.mark.parametrize("field", ["batch_size", "input_length", "output_length"])
-        def test_numeric_fields_sanitization(self, field):
+        def test_numeric_fields_sanitization(self, field: str) -> None:
             """Test numeric fields remove non-digits"""
             result = BenchmarkAnalyzer._sanitize_parameter_value(field, "abc123def456")
             assert result == "123456"
 
-        def test_other_fields_strip_whitespace(self):
+        def test_other_fields_strip_whitespace(self) -> None:
             """Test other fields just strip whitespace"""
             result = BenchmarkAnalyzer._sanitize_parameter_value("model", "  llama-7b  ")
             assert result == "llama-7b"
@@ -460,7 +487,7 @@ class TestBenchmarkAnalyzerStaticMethods:
         """Test _validate_timestamp_format static method"""
 
         @patch("amd_bench.core.analysis.logger")
-        def test_valid_yyyymmdd_hhmmss_format(self, mock_logger):
+        def test_valid_yyyymmdd_hhmmss_format(self, mock_logger) -> None:
             """Test valid YYYYMMDD_HHMMSS format"""
             BenchmarkAnalyzer._validate_timestamp_format("20240812_143022", "test_file.json")
 
@@ -468,7 +495,7 @@ class TestBenchmarkAnalyzerStaticMethods:
             mock_logger.warning.assert_not_called()
 
         @patch("amd_bench.core.analysis.logger")
-        def test_invalid_timestamp_logs_warning(self, mock_logger):
+        def test_invalid_timestamp_logs_warning(self, mock_logger) -> None:
             """Test invalid timestamp logs warning"""
             BenchmarkAnalyzer._validate_timestamp_format("invalid_timestamp", "test_file.json")
 
@@ -486,7 +513,7 @@ class TestBenchmarkAnalyzerStaticMethods:
 class TestEdgeCases:
     """Test edge cases and error conditions"""
 
-    def test_analyzer_with_invalid_regex_pattern(self):
+    def test_analyzer_with_invalid_regex_pattern(self) -> None:
         """Test analyzer with invalid regex pattern"""
         with pytest.raises(ValueError, match="invalid regex pattern"):
             AnalysisConfig(
@@ -501,9 +528,20 @@ class TestEdgeCases:
                 ],
             )
 
-    def test_empty_parameters_handling(self):
+    def test_empty_parameters_handling(self) -> None:
         """Test handling of completely empty parameters"""
-        config = AnalysisConfig(input_dir=Path("/tmp"), output_dir=Path("/tmp/output"))
+
+        # Create a temporary directory with the expected structure
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            input_dir = temp_path / "input"
+            containerized_dir = input_dir / "containerized"
+            containerized_dir.mkdir(parents=True)
+
+            # Create a sample JSON file to pass validation
+            (containerized_dir / "sample.json").write_text('{"avg_latency": 1.0}')
+
+            config = AnalysisConfig(input_dir=input_dir, output_dir=temp_path / "output")
 
         analyzer = BenchmarkAnalyzer(config)
         result = analyzer._get_default_parameters_from_config("")

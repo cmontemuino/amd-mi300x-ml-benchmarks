@@ -1,0 +1,863 @@
+=== vLLM Benchmark Suite Started ===
+Timestamp: Thu Aug  7 06:58:23 PM CEST 2025
+Development mode: false
+PID: 2892049
+Log file: /home/carpincho/experiments/03-results/logs/benchmark_run_20250807_185823.log
+=====================================
+
+[2025-08-07 18:58:23] Activating virtual environment...
+[2025-08-07 18:58:23] ✅ Virtual environment activated: /home/carpincho/experiments/.venv
+[2025-08-07 18:58:23] Installing Python dependencies...
+[2025-08-07 18:58:23] Starting Python benchmark runner...
+[2025-08-07 19:00:10] 
+[2025-08-07 19:00:10] === Dell PowerEdge XE9680 vLLM Benchmark Suite ===
+[2025-08-07 19:00:10] ✓ Results directory structure created at: /home/carpincho/experiments/03-results
+[2025-08-07 19:00:10] ✓ Signal handlers registered for graceful shutdown
+[2025-08-07 19:00:10] 
+[2025-08-07 19:00:10] Total planned tests: 12
+[2025-08-07 19:00:10] Models: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:00:10] Benchmarks: latency
+[2025-08-07 19:00:10] Batch sizes: [1, 8, 32]
+[2025-08-07 19:00:10] Input lengths: [128]
+[2025-08-07 19:00:10] 
+[2025-08-07 19:00:10] ==================================================
+[2025-08-07 19:00:10] Progress: 1/12 (8.3%)
+[2025-08-07 19:00:10] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:00:10] Benchmark: latency
+[2025-08-07 19:00:10] Configuration: 1 batch, float16
+[2025-08-07 19:00:10] 
+[2025-08-07 19:00:10] ===================================================================
+[2025-08-07 19:00:10] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8
+[2025-08-07 19:00:10] ===================================================================
+[2025-08-07 19:00:10] 📋 Configuration:
+[2025-08-07 19:00:10] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:00:10] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:00:10] Type: latency
+[2025-08-07 19:00:10] Batch Size: 1
+[2025-08-07 19:00:10] Input/Output Length: 128/128
+[2025-08-07 19:00:10] Data Type: float16
+[2025-08-07 19:00:10] Memory Utilization: 0.8
+[2025-08-07 19:00:10] Tensor Parallel: 1
+[2025-08-07 19:00:10] Max Length: 131072
+[2025-08-07 19:00:10] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.json
+[2025-08-07 19:00:10] 🔍 Starting hardware monitoring...
+[2025-08-07 19:00:10] Duration: 3660s
+[2025-08-07 19:00:10] Experiment ID: Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8
+[2025-08-07 19:00:10] ✅ Hardware monitoring started (PID: 2892105)
+[2025-08-07 19:00:10] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:00:10] 🚀 Starting container benchmark...
+[2025-08-07 19:00:10] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.log
+[2025-08-07 19:00:10] 📊 Namespace(input_len=128, output_len=128, batch_size=1, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:00:10] 📊 INFO 08-07 16:58:54 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:00:10] 📊 INFO 08-07 17:00:04 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 62.60 seconds
+[2025-08-07 19:00:10] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:00:10] 📊 Warmup iterations:  20%|██        | 1/5 [00:01<00:07,  1.85s/it]
+[2025-08-07 19:00:10] 📊 Warmup iterations:  40%|████      | 2/5 [00:02<00:03,  1.18s/it]
+[2025-08-07 19:00:10] 📊 Warmup iterations:  60%|██████    | 3/5 [00:03<00:01,  1.03it/s]
+[2025-08-07 19:00:10] 📊 Warmup iterations:  80%|████████  | 4/5 [00:04<00:00,  1.15it/s]
+[2025-08-07 19:00:10] 📊 Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.23it/s]
+[2025-08-07 19:00:10] 📊 Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.06it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:00:10 [metrics.py:417] Avg prompt throughput: 153.6 tokens/s, Avg generation throughput: 137.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:01:27] 📊 Profiling iterations:  10%|█         | 1/10 [00:00<00:06,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  20%|██        | 2/10 [00:01<00:05,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  30%|███       | 3/10 [00:02<00:05,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  40%|████      | 4/10 [00:02<00:04,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  50%|█████     | 5/10 [00:03<00:03,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  60%|██████    | 6/10 [00:04<00:02,  1.40it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  70%|███████   | 7/10 [00:05<00:02,  1.40it/s]INFO 08-07 17:00:15 [metrics.py:417] Avg prompt throughput: 179.1 tokens/s, Avg generation throughput: 178.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:01:27] 📊 Profiling iterations:  80%|████████  | 8/10 [00:05<00:01,  1.40it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:06<00:00,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.39it/s]
+[2025-08-07 19:01:27] 📊 Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.39it/s]
+[2025-08-07 19:01:28] ✅ Results saved (573 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.json
+[2025-08-07 19:01:28] 📋 Summary: Duration: 0:01:56.656679, Return code: 0
+[2025-08-07 19:01:28] 📊 Hardware metrics collected:
+[2025-08-07 19:01:28] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.csv (10632 bytes)
+[2025-08-07 19:01:28] gpu_power: gpu_power_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.csv (4945 bytes)
+[2025-08-07 19:01:28] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.csv (5757 bytes)
+[2025-08-07 19:01:28] cpu_*: cpu_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.csv (774 bytes)
+[2025-08-07 19:01:28] memory_*: memory_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.8_20250807_185823.csv (1089 bytes)
+[2025-08-07 19:01:28] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:01:28] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:01:28] ✅ Test completed successfuly
+[2025-08-07 19:01:28] ⏱️	Cooling period (30s)...
+[2025-08-07 19:01:28] 30s remaining...
+[2025-08-07 19:01:28] 20s remaining...
+[2025-08-07 19:01:28] 10s remaining...
+[2025-08-07 19:01:28] 3s remaining...
+[2025-08-07 19:01:28] 2s remaining...
+[2025-08-07 19:01:28] 1s remaining...
+[2025-08-07 19:01:28] 
+[2025-08-07 19:01:28] ==================================================
+[2025-08-07 19:01:28] Progress: 2/12 (16.7%)
+[2025-08-07 19:01:28] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:01:28] Benchmark: latency
+[2025-08-07 19:01:28] Configuration: 1 batch, float16
+[2025-08-07 19:01:28] 
+[2025-08-07 19:01:28] ===================================================================
+[2025-08-07 19:01:28] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9
+[2025-08-07 19:01:28] ===================================================================
+[2025-08-07 19:01:28] 📋 Configuration:
+[2025-08-07 19:01:28] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:01:28] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:01:28] Type: latency
+[2025-08-07 19:01:28] Batch Size: 1
+[2025-08-07 19:01:28] Input/Output Length: 128/128
+[2025-08-07 19:01:28] Data Type: float16
+[2025-08-07 19:01:28] Memory Utilization: 0.9
+[2025-08-07 19:01:28] Tensor Parallel: 1
+[2025-08-07 19:01:28] Max Length: 131072
+[2025-08-07 19:01:28] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.json
+[2025-08-07 19:01:28] 🔍 Starting hardware monitoring...
+[2025-08-07 19:01:28] Duration: 3660s
+[2025-08-07 19:01:28] Experiment ID: Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9
+[2025-08-07 19:01:28] ✅ Hardware monitoring started (PID: 2895726)
+[2025-08-07 19:01:28] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:01:28] 🚀 Starting container benchmark...
+[2025-08-07 19:01:28] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.log
+[2025-08-07 19:01:28] 📊 Namespace(input_len=128, output_len=128, batch_size=1, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:03:55] 📊 INFO 08-07 17:01:27 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:03:55] 📊 INFO 08-07 17:02:33 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 61.89 seconds
+[2025-08-07 19:03:55] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:03:55] 📊 Warmup iterations:  20%|██        | 1/5 [00:01<00:07,  1.84s/it]
+[2025-08-07 19:03:55] 📊 Warmup iterations:  40%|████      | 2/5 [00:02<00:03,  1.18s/it]
+[2025-08-07 19:03:55] 📊 Warmup iterations:  60%|██████    | 3/5 [00:03<00:01,  1.04it/s]
+[2025-08-07 19:03:55] 📊 Warmup iterations:  80%|████████  | 4/5 [00:03<00:00,  1.16it/s]
+[2025-08-07 19:03:55] 📊 Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.24it/s]
+[2025-08-07 19:03:55] 📊 Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.07it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:02:38 [metrics.py:417] Avg prompt throughput: 153.6 tokens/s, Avg generation throughput: 139.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:03:55] 📊 Profiling iterations:  10%|█         | 1/10 [00:00<00:06,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  20%|██        | 2/10 [00:01<00:05,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  30%|███       | 3/10 [00:02<00:05,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  40%|████      | 4/10 [00:02<00:04,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  50%|█████     | 5/10 [00:03<00:03,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  60%|██████    | 6/10 [00:04<00:02,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  70%|███████   | 7/10 [00:05<00:02,  1.40it/s]INFO 08-07 17:02:43 [metrics.py:417] Avg prompt throughput: 179.2 tokens/s, Avg generation throughput: 179.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:03:55] 📊 Profiling iterations:  80%|████████  | 8/10 [00:05<00:01,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:06<00:00,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.40it/s]
+[2025-08-07 19:03:55] 📊 Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.40it/s]
+[2025-08-07 19:03:55] ✅ Results saved (575 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.json
+[2025-08-07 19:03:55] 📋 Summary: Duration: 0:01:51.322563, Return code: 0
+[2025-08-07 19:03:55] 📊 Hardware metrics collected:
+[2025-08-07 19:03:55] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.csv (10209 bytes)
+[2025-08-07 19:03:55] gpu_power: gpu_power_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.csv (4749 bytes)
+[2025-08-07 19:03:55] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.csv (5529 bytes)
+[2025-08-07 19:03:55] cpu_*: cpu_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.csv (744 bytes)
+[2025-08-07 19:03:56] memory_*: memory_Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.csv (1048 bytes)
+[2025-08-07 19:03:56] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:03:56] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:03:56] ✅ Test completed successfuly
+[2025-08-07 19:03:56] ⏱️	Cooling period (30s)...
+[2025-08-07 19:03:56] 30s remaining...
+[2025-08-07 19:03:56] 20s remaining...
+[2025-08-07 19:03:56] 10s remaining...
+[2025-08-07 19:03:56] 3s remaining...
+[2025-08-07 19:03:56] 2s remaining...
+[2025-08-07 19:03:56] 1s remaining...
+[2025-08-07 19:03:56] 
+[2025-08-07 19:03:56] ==================================================
+[2025-08-07 19:03:56] Progress: 3/12 (25.0%)
+[2025-08-07 19:03:56] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:03:56] Benchmark: latency
+[2025-08-07 19:03:56] Configuration: 1 batch, float16
+[2025-08-07 19:03:56] 
+[2025-08-07 19:03:56] ====================================================================
+[2025-08-07 19:03:56] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8
+[2025-08-07 19:03:56] ====================================================================
+[2025-08-07 19:03:56] 📋 Configuration:
+[2025-08-07 19:03:56] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:03:56] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:03:56] Type: latency
+[2025-08-07 19:03:56] Batch Size: 1
+[2025-08-07 19:03:56] Input/Output Length: 128/1024
+[2025-08-07 19:03:56] Data Type: float16
+[2025-08-07 19:03:56] Memory Utilization: 0.8
+[2025-08-07 19:03:56] Tensor Parallel: 1
+[2025-08-07 19:03:56] Max Length: 131072
+[2025-08-07 19:03:56] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.json
+[2025-08-07 19:03:56] 🔍 Starting hardware monitoring...
+[2025-08-07 19:03:56] Duration: 3660s
+[2025-08-07 19:03:56] Experiment ID: Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8
+[2025-08-07 19:03:56] ✅ Hardware monitoring started (PID: 2899356)
+[2025-08-07 19:03:56] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:03:56] 🚀 Starting container benchmark...
+[2025-08-07 19:03:56] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.log
+[2025-08-07 19:07:07] 📊 Namespace(input_len=128, output_len=1024, batch_size=1, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:07:07] 📊 INFO 08-07 17:03:56 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:07:07] 📊 INFO 08-07 17:05:01 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 62.11 seconds
+[2025-08-07 19:07:07] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:05:06 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 142.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Warmup iterations:  20%|██        | 1/5 [00:06<00:26,  6.71s/it]INFO 08-07 17:05:11 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 183.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Warmup iterations:  40%|████      | 2/5 [00:12<00:18,  6.06s/it]INFO 08-07 17:05:16 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Warmup iterations:  60%|██████    | 3/5 [00:17<00:11,  5.85s/it]INFO 08-07 17:05:21 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Warmup iterations:  80%|████████  | 4/5 [00:23<00:05,  5.76s/it]INFO 08-07 17:05:26 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Warmup iterations: 100%|██████████| 5/5 [00:29<00:00,  5.71s/it]
+[2025-08-07 19:07:07] 📊 Warmup iterations: 100%|██████████| 5/5 [00:29<00:00,  5.83s/it]
+[2025-08-07 19:07:07] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:05:31 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  10%|█         | 1/10 [00:05<00:50,  5.61s/it]INFO 08-07 17:05:36 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  20%|██        | 2/10 [00:11<00:44,  5.61s/it]INFO 08-07 17:05:46 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  30%|███       | 3/10 [00:16<00:39,  5.61s/it]INFO 08-07 17:05:51 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  40%|████      | 4/10 [00:22<00:33,  5.61s/it]INFO 08-07 17:05:56 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  50%|█████     | 5/10 [00:28<00:28,  5.61s/it]INFO 08-07 17:06:01 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  60%|██████    | 6/10 [00:33<00:22,  5.61s/it]INFO 08-07 17:06:06 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  70%|███████   | 7/10 [00:39<00:16,  5.61s/it]INFO 08-07 17:06:11 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  80%|████████  | 8/10 [00:44<00:11,  5.60s/it]INFO 08-07 17:06:16 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:50<00:05,  5.60s/it]INFO 08-07 17:06:21 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 182.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:07:07] 📊 Profiling iterations: 100%|██████████| 10/10 [00:56<00:00,  5.60s/it]
+[2025-08-07 19:07:07] 📊 Profiling iterations: 100%|██████████| 10/10 [00:56<00:00,  5.61s/it]
+[2025-08-07 19:07:07] ✅ Results saved (559 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.json
+[2025-08-07 19:07:07] 📋 Summary: Duration: 0:03:04.851924, Return code: 0
+[2025-08-07 19:07:07] 📊 Hardware metrics collected:
+[2025-08-07 19:07:07] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.csv (16159 bytes)
+[2025-08-07 19:07:07] gpu_power: gpu_power_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.csv (7493 bytes)
+[2025-08-07 19:07:07] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.csv (8721 bytes)
+[2025-08-07 19:07:07] cpu_*: cpu_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.csv (1151 bytes)
+[2025-08-07 19:07:07] memory_*: memory_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.8_20250807_190325.csv (1663 bytes)
+[2025-08-07 19:07:07] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:07:07] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:07:07] ✅ Test completed successfuly
+[2025-08-07 19:07:07] ⏱️	Cooling period (30s)...
+[2025-08-07 19:07:07] 30s remaining...
+[2025-08-07 19:07:07] 20s remaining...
+[2025-08-07 19:07:07] 10s remaining...
+[2025-08-07 19:07:07] 3s remaining...
+[2025-08-07 19:07:07] 2s remaining...
+[2025-08-07 19:07:07] 1s remaining...
+[2025-08-07 19:07:07] 
+[2025-08-07 19:07:07] ==================================================
+[2025-08-07 19:07:07] Progress: 4/12 (33.3%)
+[2025-08-07 19:07:07] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:07:07] Benchmark: latency
+[2025-08-07 19:07:07] Configuration: 1 batch, float16
+[2025-08-07 19:07:07] 
+[2025-08-07 19:07:07] ====================================================================
+[2025-08-07 19:07:07] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9
+[2025-08-07 19:09:18] ====================================================================
+[2025-08-07 19:09:18] 📋 Configuration:
+[2025-08-07 19:09:18] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:09:18] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:09:18] Type: latency
+[2025-08-07 19:09:18] Batch Size: 1
+[2025-08-07 19:09:18] Input/Output Length: 128/1024
+[2025-08-07 19:09:18] Data Type: float16
+[2025-08-07 19:09:18] Memory Utilization: 0.9
+[2025-08-07 19:09:18] Tensor Parallel: 1
+[2025-08-07 19:09:18] Max Length: 131072
+[2025-08-07 19:09:18] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.json
+[2025-08-07 19:09:18] 🔍 Starting hardware monitoring...
+[2025-08-07 19:09:18] Duration: 3660s
+[2025-08-07 19:09:18] Experiment ID: Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9
+[2025-08-07 19:09:18] ✅ Hardware monitoring started (PID: 2905423)
+[2025-08-07 19:09:18] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:09:18] 🚀 Starting container benchmark...
+[2025-08-07 19:09:18] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.log
+[2025-08-07 19:09:18] 📊 Namespace(input_len=128, output_len=1024, batch_size=1, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:09:18] 📊 INFO 08-07 17:07:40 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:09:18] 📊 INFO 08-07 17:08:52 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 67.63 seconds
+[2025-08-07 19:09:18] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:08:58 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 134.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:09:18] 📊 Warmup iterations:  20%|██        | 1/5 [00:06<00:27,  6.97s/it]INFO 08-07 17:09:03 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 177.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:09:18] 📊 Warmup iterations:  40%|████      | 2/5 [00:12<00:18,  6.32s/it]INFO 08-07 17:09:08 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 175.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:09:18] 📊 Warmup iterations:  60%|██████    | 3/5 [00:18<00:12,  6.03s/it]INFO 08-07 17:09:13 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 180.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Warmup iterations:  80%|████████  | 4/5 [00:24<00:05,  5.91s/it]INFO 08-07 17:09:18 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 177.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Warmup iterations: 100%|██████████| 5/5 [00:30<00:00,  5.96s/it]
+[2025-08-07 19:11:33] 📊 Warmup iterations: 100%|██████████| 5/5 [00:30<00:00,  6.06s/it]
+[2025-08-07 19:11:33] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:09:28 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 179.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  10%|█         | 1/10 [00:05<00:51,  5.71s/it]INFO 08-07 17:09:33 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 181.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  20%|██        | 2/10 [00:11<00:45,  5.68s/it]INFO 08-07 17:09:38 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 166.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  30%|███       | 3/10 [00:17<00:41,  5.87s/it]INFO 08-07 17:09:43 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 178.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  40%|████      | 4/10 [00:23<00:34,  5.82s/it]INFO 08-07 17:09:48 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 176.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  50%|█████     | 5/10 [00:28<00:28,  5.79s/it]INFO 08-07 17:09:53 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 176.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  60%|██████    | 6/10 [00:34<00:23,  5.80s/it]INFO 08-07 17:10:03 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 175.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  70%|███████   | 7/10 [00:40<00:17,  5.81s/it]INFO 08-07 17:10:08 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 179.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  80%|████████  | 8/10 [00:46<00:11,  5.79s/it]INFO 08-07 17:10:13 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 177.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:52<00:05,  5.76s/it]INFO 08-07 17:10:18 [metrics.py:417] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 178.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:11:33] 📊 Profiling iterations: 100%|██████████| 10/10 [00:57<00:00,  5.76s/it]
+[2025-08-07 19:11:33] 📊 Profiling iterations: 100%|██████████| 10/10 [00:57<00:00,  5.78s/it]
+[2025-08-07 19:11:33] ✅ Results saved (560 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.json
+[2025-08-07 19:11:33] 📋 Summary: Duration: 0:03:18.315040, Return code: 0
+[2025-08-07 19:11:33] 📊 Hardware metrics collected:
+[2025-08-07 19:11:33] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.csv (17448 bytes)
+[2025-08-07 19:11:33] gpu_power: gpu_power_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.csv (8081 bytes)
+[2025-08-07 19:11:33] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.csv (9177 bytes)
+[2025-08-07 19:11:33] cpu_*: cpu_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.csv (1238 bytes)
+[2025-08-07 19:11:33] memory_*: memory_Llama-3.1-8B_latency_bs1_in128_out1024_float16_mem0.9_20250807_190707.csv (1786 bytes)
+[2025-08-07 19:11:33] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:11:33] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:11:33] ✅ Test completed successfuly
+[2025-08-07 19:11:33] ⏱️	Cooling period (30s)...
+[2025-08-07 19:11:33] 30s remaining...
+[2025-08-07 19:11:33] 20s remaining...
+[2025-08-07 19:11:33] 10s remaining...
+[2025-08-07 19:11:33] 3s remaining...
+[2025-08-07 19:11:33] 2s remaining...
+[2025-08-07 19:11:33] 1s remaining...
+[2025-08-07 19:11:33] 
+[2025-08-07 19:11:33] ==================================================
+[2025-08-07 19:11:33] Progress: 5/12 (41.7%)
+[2025-08-07 19:11:33] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:11:33] Benchmark: latency
+[2025-08-07 19:11:33] Configuration: 8 batch, float16
+[2025-08-07 19:11:33] 
+[2025-08-07 19:11:33] ===================================================================
+[2025-08-07 19:11:33] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8
+[2025-08-07 19:11:33] ===================================================================
+[2025-08-07 19:11:33] 📋 Configuration:
+[2025-08-07 19:11:33] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:11:33] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:11:33] Type: latency
+[2025-08-07 19:11:33] Batch Size: 8
+[2025-08-07 19:11:33] Input/Output Length: 128/128
+[2025-08-07 19:11:33] Data Type: float16
+[2025-08-07 19:11:33] Memory Utilization: 0.8
+[2025-08-07 19:11:33] Tensor Parallel: 1
+[2025-08-07 19:11:33] Max Length: 131072
+[2025-08-07 19:11:33] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.json
+[2025-08-07 19:11:33] 🔍 Starting hardware monitoring...
+[2025-08-07 19:11:33] Duration: 3660s
+[2025-08-07 19:11:33] Experiment ID: Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8
+[2025-08-07 19:11:33] ✅ Hardware monitoring started (PID: 2913145)
+[2025-08-07 19:11:33] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:11:33] 🚀 Starting container benchmark...
+[2025-08-07 19:11:33] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.log
+[2025-08-07 19:14:03] 📊 Namespace(input_len=128, output_len=128, batch_size=8, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:14:03] 📊 INFO 08-07 17:11:33 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:14:03] 📊 INFO 08-07 17:12:38 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 61.22 seconds
+[2025-08-07 19:14:03] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:14:03] 📊 Warmup iterations:  20%|██        | 1/5 [00:02<00:08,  2.06s/it]
+[2025-08-07 19:14:03] 📊 Warmup iterations:  40%|████      | 2/5 [00:02<00:04,  1.37s/it]
+[2025-08-07 19:14:03] 📊 Warmup iterations:  60%|██████    | 3/5 [00:03<00:02,  1.16s/it]
+[2025-08-07 19:14:03] 📊 Warmup iterations:  80%|████████  | 4/5 [00:04<00:01,  1.05s/it]INFO 08-07 17:12:43 [metrics.py:417] Avg prompt throughput: 1023.7 tokens/s, Avg generation throughput: 870.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:14:03] 📊 Warmup iterations: 100%|██████████| 5/5 [00:05<00:00,  1.00it/s]
+[2025-08-07 19:14:03] 📊 Warmup iterations: 100%|██████████| 5/5 [00:05<00:00,  1.13s/it]
+[2025-08-07 19:14:03] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  10%|█         | 1/10 [00:00<00:08,  1.12it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  20%|██        | 2/10 [00:01<00:07,  1.12it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  30%|███       | 3/10 [00:02<00:06,  1.12it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  40%|████      | 4/10 [00:03<00:05,  1.12it/s]INFO 08-07 17:12:48 [metrics.py:417] Avg prompt throughput: 1023.0 tokens/s, Avg generation throughput: 1147.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:14:03] 📊 Profiling iterations:  50%|█████     | 5/10 [00:04<00:04,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  60%|██████    | 6/10 [00:05<00:03,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  70%|███████   | 7/10 [00:06<00:02,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  80%|████████  | 8/10 [00:07<00:01,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:08<00:00,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations: 100%|██████████| 10/10 [00:08<00:00,  1.11it/s]
+[2025-08-07 19:14:03] 📊 Profiling iterations: 100%|██████████| 10/10 [00:08<00:00,  1.11it/s]
+[2025-08-07 19:14:03] ✅ Results saved (576 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.json
+[2025-08-07 19:14:03] 📋 Summary: Duration: 0:01:53.027437, Return code: 0
+[2025-08-07 19:14:03] 📊 Hardware metrics collected:
+[2025-08-07 19:14:03] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.csv (10233 bytes)
+[2025-08-07 19:14:03] gpu_power: gpu_power_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.csv (4749 bytes)
+[2025-08-07 19:14:03] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.csv (5529 bytes)
+[2025-08-07 19:14:03] cpu_*: cpu_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.csv (745 bytes)
+[2025-08-07 19:14:03] memory_*: memory_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.8_20250807_191102.csv (1048 bytes)
+[2025-08-07 19:14:03] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:14:03] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:14:03] ✅ Test completed successfuly
+[2025-08-07 19:14:03] ⏱️	Cooling period (30s)...
+[2025-08-07 19:14:03] 30s remaining...
+[2025-08-07 19:14:03] 20s remaining...
+[2025-08-07 19:14:03] 10s remaining...
+[2025-08-07 19:14:03] 3s remaining...
+[2025-08-07 19:14:03] 2s remaining...
+[2025-08-07 19:14:03] 1s remaining...
+[2025-08-07 19:14:03] 
+[2025-08-07 19:14:03] ==================================================
+[2025-08-07 19:14:03] Progress: 6/12 (50.0%)
+[2025-08-07 19:14:03] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:14:03] Benchmark: latency
+[2025-08-07 19:14:03] Configuration: 8 batch, float16
+[2025-08-07 19:14:03] 
+[2025-08-07 19:14:03] ===================================================================
+[2025-08-07 19:14:03] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9
+[2025-08-07 19:14:03] ===================================================================
+[2025-08-07 19:14:03] 📋 Configuration:
+[2025-08-07 19:14:03] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:14:03] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:14:03] Type: latency
+[2025-08-07 19:14:03] Batch Size: 8
+[2025-08-07 19:14:03] Input/Output Length: 128/128
+[2025-08-07 19:14:03] Data Type: float16
+[2025-08-07 19:14:03] Memory Utilization: 0.9
+[2025-08-07 19:14:03] Tensor Parallel: 1
+[2025-08-07 19:14:03] Max Length: 131072
+[2025-08-07 19:14:03] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.json
+[2025-08-07 19:14:03] 🔍 Starting hardware monitoring...
+[2025-08-07 19:14:03] Duration: 3660s
+[2025-08-07 19:14:03] Experiment ID: Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9
+[2025-08-07 19:14:03] ✅ Hardware monitoring started (PID: 2919080)
+[2025-08-07 19:14:03] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:14:03] 🚀 Starting container benchmark...
+[2025-08-07 19:14:03] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.log
+[2025-08-07 19:16:36] 📊 Namespace(input_len=128, output_len=128, batch_size=8, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:16:36] 📊 INFO 08-07 17:14:03 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:16:36] 📊 INFO 08-07 17:15:08 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 61.85 seconds
+[2025-08-07 19:16:36] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:16:36] 📊 Warmup iterations:  20%|██        | 1/5 [00:02<00:08,  2.07s/it]
+[2025-08-07 19:16:36] 📊 Warmup iterations:  40%|████      | 2/5 [00:02<00:04,  1.38s/it]
+[2025-08-07 19:16:36] 📊 Warmup iterations:  60%|██████    | 3/5 [00:03<00:02,  1.16s/it]
+[2025-08-07 19:16:36] 📊 Warmup iterations:  80%|████████  | 4/5 [00:04<00:01,  1.06s/it]INFO 08-07 17:15:14 [metrics.py:417] Avg prompt throughput: 1023.2 tokens/s, Avg generation throughput: 866.5 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:16:36] 📊 Warmup iterations: 100%|██████████| 5/5 [00:05<00:00,  1.00it/s]
+[2025-08-07 19:16:36] 📊 Warmup iterations: 100%|██████████| 5/5 [00:05<00:00,  1.13s/it]
+[2025-08-07 19:16:36] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  10%|█         | 1/10 [00:01<00:10,  1.11s/it]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  20%|██        | 2/10 [00:02<00:07,  1.01it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  30%|███       | 3/10 [00:02<00:06,  1.05it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  40%|████      | 4/10 [00:03<00:05,  1.08it/s]INFO 08-07 17:15:19 [metrics.py:417] Avg prompt throughput: 1023.9 tokens/s, Avg generation throughput: 1092.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:16:36] 📊 Profiling iterations:  50%|█████     | 5/10 [00:04<00:04,  1.09it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  60%|██████    | 6/10 [00:05<00:03,  1.10it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  70%|███████   | 7/10 [00:06<00:02,  1.10it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  80%|████████  | 8/10 [00:07<00:01,  1.11it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:08<00:00,  1.11it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations: 100%|██████████| 10/10 [00:09<00:00,  1.11it/s]
+[2025-08-07 19:16:36] 📊 Profiling iterations: 100%|██████████| 10/10 [00:09<00:00,  1.09it/s]
+[2025-08-07 19:16:36] ✅ Results saved (574 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.json
+[2025-08-07 19:16:36] 📋 Summary: Duration: 0:01:54.162768, Return code: 0
+[2025-08-07 19:16:36] 📊 Hardware metrics collected:
+[2025-08-07 19:16:36] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.csv (10233 bytes)
+[2025-08-07 19:16:36] gpu_power: gpu_power_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.csv (4749 bytes)
+[2025-08-07 19:16:36] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.csv (5529 bytes)
+[2025-08-07 19:16:36] cpu_*: cpu_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.csv (773 bytes)
+[2025-08-07 19:16:36] memory_*: memory_Llama-3.1-8B_latency_bs8_in128_out128_float16_mem0.9_20250807_191332.csv (1089 bytes)
+[2025-08-07 19:16:36] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:16:36] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:16:36] ✅ Test completed successfuly
+[2025-08-07 19:16:36] ⏱️	Cooling period (30s)...
+[2025-08-07 19:16:36] 30s remaining...
+[2025-08-07 19:16:36] 20s remaining...
+[2025-08-07 19:16:36] 10s remaining...
+[2025-08-07 19:16:36] 3s remaining...
+[2025-08-07 19:16:36] 2s remaining...
+[2025-08-07 19:16:36] 1s remaining...
+[2025-08-07 19:16:36] 
+[2025-08-07 19:16:36] ==================================================
+[2025-08-07 19:16:36] Progress: 7/12 (58.3%)
+[2025-08-07 19:16:36] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:16:36] Benchmark: latency
+[2025-08-07 19:16:36] Configuration: 8 batch, float16
+[2025-08-07 19:16:36] 
+[2025-08-07 19:16:36] ====================================================================
+[2025-08-07 19:16:36] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8
+[2025-08-07 19:16:36] ====================================================================
+[2025-08-07 19:16:36] 📋 Configuration:
+[2025-08-07 19:16:36] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:16:36] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:16:36] Type: latency
+[2025-08-07 19:16:36] Batch Size: 8
+[2025-08-07 19:16:36] Input/Output Length: 128/1024
+[2025-08-07 19:16:36] Data Type: float16
+[2025-08-07 19:16:36] Memory Utilization: 0.8
+[2025-08-07 19:16:36] Tensor Parallel: 1
+[2025-08-07 19:16:36] Max Length: 131072
+[2025-08-07 19:16:36] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.json
+[2025-08-07 19:16:36] 🔍 Starting hardware monitoring...
+[2025-08-07 19:16:36] Duration: 3660s
+[2025-08-07 19:16:36] Experiment ID: Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8
+[2025-08-07 19:16:36] ✅ Hardware monitoring started (PID: 2925915)
+[2025-08-07 19:16:36] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:16:36] 🚀 Starting container benchmark...
+[2025-08-07 19:16:36] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.log
+[2025-08-07 19:20:17] 📊 Namespace(input_len=128, output_len=1024, batch_size=8, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:20:17] 📊 INFO 08-07 17:16:36 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:20:17] 📊 INFO 08-07 17:17:47 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 67.68 seconds
+[2025-08-07 19:20:17] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:17:53 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 820.5 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Warmup iterations:  20%|██        | 1/5 [00:08<00:34,  8.53s/it]INFO 08-07 17:17:58 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1157.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Warmup iterations:  40%|████      | 2/5 [00:15<00:22,  7.66s/it]INFO 08-07 17:18:08 [metrics.py:417] Avg prompt throughput: 204.5 tokens/s, Avg generation throughput: 1163.2 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Warmup iterations:  60%|██████    | 3/5 [00:22<00:14,  7.41s/it]INFO 08-07 17:18:13 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1144.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Warmup iterations:  80%|████████  | 4/5 [00:29<00:07,  7.29s/it]INFO 08-07 17:18:18 [metrics.py:417] Avg prompt throughput: 204.5 tokens/s, Avg generation throughput: 1144.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Warmup iterations: 100%|██████████| 5/5 [00:37<00:00,  7.31s/it]
+[2025-08-07 19:20:17] 📊 Warmup iterations: 100%|██████████| 5/5 [00:37<00:00,  7.43s/it]
+[2025-08-07 19:20:17] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:18:28 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1089.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  10%|█         | 1/10 [00:07<01:03,  7.10s/it]INFO 08-07 17:18:33 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1138.6 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  20%|██        | 2/10 [00:14<00:56,  7.09s/it]INFO 08-07 17:18:43 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1153.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  30%|███       | 3/10 [00:21<00:49,  7.08s/it]INFO 08-07 17:18:48 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1158.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  40%|████      | 4/10 [00:28<00:42,  7.07s/it]INFO 08-07 17:18:58 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1150.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  50%|█████     | 5/10 [00:35<00:35,  7.08s/it]INFO 08-07 17:19:03 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1165.4 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  60%|██████    | 6/10 [00:42<00:28,  7.08s/it]INFO 08-07 17:19:08 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1147.8 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  70%|███████   | 7/10 [00:49<00:21,  7.12s/it]INFO 08-07 17:19:18 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1131.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  80%|████████  | 8/10 [00:56<00:14,  7.13s/it]INFO 08-07 17:19:23 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1137.3 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations:  90%|█████████ | 9/10 [01:03<00:07,  7.10s/it]INFO 08-07 17:19:33 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1156.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:20:17] 📊 Profiling iterations: 100%|██████████| 10/10 [01:11<00:00,  7.14s/it]
+[2025-08-07 19:20:17] 📊 Profiling iterations: 100%|██████████| 10/10 [01:11<00:00,  7.11s/it]
+[2025-08-07 19:20:17] ✅ Results saved (559 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.json
+[2025-08-07 19:20:17] 📋 Summary: Duration: 0:03:36.551864, Return code: 0
+[2025-08-07 19:20:17] 📊 Hardware metrics collected:
+[2025-08-07 19:20:17] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.csv (18732 bytes)
+[2025-08-07 19:20:17] gpu_power: gpu_power_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.csv (8669 bytes)
+[2025-08-07 19:20:17] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.csv (10089 bytes)
+[2025-08-07 19:20:17] cpu_*: cpu_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.csv (1325 bytes)
+[2025-08-07 19:20:17] memory_*: memory_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.8_20250807_191603.csv (1909 bytes)
+[2025-08-07 19:20:17] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:20:17] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:20:17] ✅ Test completed successfuly
+[2025-08-07 19:20:17] ⏱️	Cooling period (30s)...
+[2025-08-07 19:20:17] 30s remaining...
+[2025-08-07 19:20:17] 20s remaining...
+[2025-08-07 19:20:17] 10s remaining...
+[2025-08-07 19:20:17] 3s remaining...
+[2025-08-07 19:20:17] 2s remaining...
+[2025-08-07 19:20:17] 1s remaining...
+[2025-08-07 19:20:17] 
+[2025-08-07 19:20:17] ==================================================
+[2025-08-07 19:20:17] Progress: 8/12 (66.7%)
+[2025-08-07 19:20:17] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:20:17] Benchmark: latency
+[2025-08-07 19:20:17] Configuration: 8 batch, float16
+[2025-08-07 19:20:17] 
+[2025-08-07 19:20:17] ====================================================================
+[2025-08-07 19:22:37] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9
+[2025-08-07 19:22:37] ====================================================================
+[2025-08-07 19:22:37] 📋 Configuration:
+[2025-08-07 19:22:37] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:22:37] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:22:37] Type: latency
+[2025-08-07 19:22:37] Batch Size: 8
+[2025-08-07 19:22:37] Input/Output Length: 128/1024
+[2025-08-07 19:22:37] Data Type: float16
+[2025-08-07 19:22:37] Memory Utilization: 0.9
+[2025-08-07 19:22:37] Tensor Parallel: 1
+[2025-08-07 19:22:37] Max Length: 131072
+[2025-08-07 19:22:37] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.json
+[2025-08-07 19:22:37] 🔍 Starting hardware monitoring...
+[2025-08-07 19:22:37] Duration: 3660s
+[2025-08-07 19:22:37] Experiment ID: Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9
+[2025-08-07 19:22:37] ✅ Hardware monitoring started (PID: 2937905)
+[2025-08-07 19:22:37] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:22:37] 🚀 Starting container benchmark...
+[2025-08-07 19:22:37] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.log
+[2025-08-07 19:22:37] 📊 Namespace(input_len=128, output_len=1024, batch_size=8, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:22:37] 📊 INFO 08-07 17:20:50 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:22:37] 📊 INFO 08-07 17:22:01 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 67.04 seconds
+[2025-08-07 19:22:37] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:22:07 [metrics.py:417] Avg prompt throughput: 204.5 tokens/s, Avg generation throughput: 866.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:22:37] 📊 Warmup iterations:  20%|██        | 1/5 [00:08<00:34,  8.64s/it]INFO 08-07 17:22:12 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1076.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:22:37] 📊 Warmup iterations:  40%|████      | 2/5 [00:15<00:23,  7.86s/it]INFO 08-07 17:22:22 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1131.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:22:37] 📊 Warmup iterations:  60%|██████    | 3/5 [00:23<00:15,  7.56s/it]INFO 08-07 17:22:27 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1131.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Warmup iterations:  80%|████████  | 4/5 [00:30<00:07,  7.39s/it]INFO 08-07 17:22:37 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1158.3 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Warmup iterations: 100%|██████████| 5/5 [00:37<00:00,  7.29s/it]
+[2025-08-07 19:25:04] 📊 Warmup iterations: 100%|██████████| 5/5 [00:37<00:00,  7.48s/it]
+[2025-08-07 19:25:04] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:22:42 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1149.6 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  10%|█         | 1/10 [00:07<01:03,  7.08s/it]INFO 08-07 17:22:47 [metrics.py:417] Avg prompt throughput: 204.6 tokens/s, Avg generation throughput: 1144.6 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  20%|██        | 2/10 [00:14<00:57,  7.23s/it]INFO 08-07 17:22:57 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1157.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  30%|███       | 3/10 [00:21<00:50,  7.17s/it]INFO 08-07 17:23:02 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1147.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  40%|████      | 4/10 [00:28<00:42,  7.15s/it]INFO 08-07 17:23:12 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1130.6 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  50%|█████     | 5/10 [00:35<00:35,  7.18s/it]INFO 08-07 17:23:17 [metrics.py:417] Avg prompt throughput: 204.5 tokens/s, Avg generation throughput: 1132.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  60%|██████    | 6/10 [00:43<00:28,  7.19s/it]INFO 08-07 17:23:27 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1162.8 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  70%|███████   | 7/10 [00:50<00:21,  7.15s/it]INFO 08-07 17:23:32 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1135.7 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  80%|████████  | 8/10 [00:57<00:14,  7.17s/it]INFO 08-07 17:23:37 [metrics.py:417] Avg prompt throughput: 204.7 tokens/s, Avg generation throughput: 1133.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations:  90%|█████████ | 9/10 [01:04<00:07,  7.15s/it]INFO 08-07 17:23:47 [metrics.py:417] Avg prompt throughput: 204.8 tokens/s, Avg generation throughput: 1153.5 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:25:04] 📊 Profiling iterations: 100%|██████████| 10/10 [01:11<00:00,  7.14s/it]
+[2025-08-07 19:25:04] 📊 Profiling iterations: 100%|██████████| 10/10 [01:11<00:00,  7.16s/it]
+[2025-08-07 19:25:04] ✅ Results saved (560 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.json
+[2025-08-07 19:25:04] 📋 Summary: Duration: 0:03:37.128153, Return code: 0
+[2025-08-07 19:25:04] 📊 Hardware metrics collected:
+[2025-08-07 19:25:04] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.csv (18731 bytes)
+[2025-08-07 19:25:04] gpu_power: gpu_power_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.csv (8669 bytes)
+[2025-08-07 19:25:04] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.csv (10089 bytes)
+[2025-08-07 19:25:04] cpu_*: cpu_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.csv (1326 bytes)
+[2025-08-07 19:25:04] memory_*: memory_Llama-3.1-8B_latency_bs8_in128_out1024_float16_mem0.9_20250807_192017.csv (1909 bytes)
+[2025-08-07 19:25:04] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:25:04] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:25:04] ✅ Test completed successfuly
+[2025-08-07 19:25:04] ⏱️	Cooling period (30s)...
+[2025-08-07 19:25:04] 30s remaining...
+[2025-08-07 19:25:04] 20s remaining...
+[2025-08-07 19:25:04] 10s remaining...
+[2025-08-07 19:25:04] 3s remaining...
+[2025-08-07 19:25:04] 2s remaining...
+[2025-08-07 19:25:04] 1s remaining...
+[2025-08-07 19:25:04] 
+[2025-08-07 19:25:04] ==================================================
+[2025-08-07 19:25:04] Progress: 9/12 (75.0%)
+[2025-08-07 19:25:04] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:25:04] Benchmark: latency
+[2025-08-07 19:25:04] Configuration: 32 batch, float16
+[2025-08-07 19:25:04] 
+[2025-08-07 19:25:04] ====================================================================
+[2025-08-07 19:25:04] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8
+[2025-08-07 19:25:04] ====================================================================
+[2025-08-07 19:25:04] 📋 Configuration:
+[2025-08-07 19:25:04] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:25:04] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:25:04] Type: latency
+[2025-08-07 19:25:04] Batch Size: 32
+[2025-08-07 19:25:04] Input/Output Length: 128/128
+[2025-08-07 19:25:04] Data Type: float16
+[2025-08-07 19:25:04] Memory Utilization: 0.8
+[2025-08-07 19:25:04] Tensor Parallel: 1
+[2025-08-07 19:25:04] Max Length: 131072
+[2025-08-07 19:25:04] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.json
+[2025-08-07 19:25:04] 🔍 Starting hardware monitoring...
+[2025-08-07 19:25:04] Duration: 3660s
+[2025-08-07 19:25:04] Experiment ID: Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8
+[2025-08-07 19:25:04] ✅ Hardware monitoring started (PID: 2951249)
+[2025-08-07 19:25:04] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:25:04] 🚀 Starting container benchmark...
+[2025-08-07 19:25:04] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.log
+[2025-08-07 19:27:50] 📊 Namespace(input_len=128, output_len=128, batch_size=32, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:27:50] 📊 INFO 08-07 17:25:04 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:27:50] 📊 INFO 08-07 17:26:16 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 68.13 seconds
+[2025-08-07 19:27:50] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:27:50] 📊 Warmup iterations:  20%|██        | 1/5 [00:02<00:09,  2.42s/it]
+[2025-08-07 19:27:50] 📊 Warmup iterations:  40%|████      | 2/5 [00:03<00:05,  1.68s/it]
+[2025-08-07 19:27:50] 📊 Warmup iterations:  60%|██████    | 3/5 [00:04<00:02,  1.44s/it]INFO 08-07 17:26:21 [metrics.py:417] Avg prompt throughput: 3274.4 tokens/s, Avg generation throughput: 2551.8 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:27:50] 📊 Warmup iterations:  80%|████████  | 4/5 [00:05<00:01,  1.35s/it]
+[2025-08-07 19:27:50] 📊 Warmup iterations: 100%|██████████| 5/5 [00:07<00:00,  1.30s/it]
+[2025-08-07 19:27:50] 📊 Warmup iterations: 100%|██████████| 5/5 [00:07<00:00,  1.43s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  10%|█         | 1/10 [00:01<00:10,  1.16s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  20%|██        | 2/10 [00:02<00:09,  1.19s/it]INFO 08-07 17:26:26 [metrics.py:417] Avg prompt throughput: 3276.3 tokens/s, Avg generation throughput: 3474.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:27:50] 📊 Profiling iterations:  30%|███       | 3/10 [00:03<00:08,  1.17s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  40%|████      | 4/10 [00:04<00:07,  1.28s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  50%|█████     | 5/10 [00:06<00:06,  1.25s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  60%|██████    | 6/10 [00:07<00:04,  1.23s/it]INFO 08-07 17:26:31 [metrics.py:417] Avg prompt throughput: 3272.6 tokens/s, Avg generation throughput: 3253.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:27:50] 📊 Profiling iterations:  70%|███████   | 7/10 [00:08<00:03,  1.22s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  80%|████████  | 8/10 [00:09<00:02,  1.20s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:10<00:01,  1.19s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations: 100%|██████████| 10/10 [00:12<00:00,  1.19s/it]
+[2025-08-07 19:27:50] 📊 Profiling iterations: 100%|██████████| 10/10 [00:12<00:00,  1.21s/it]
+[2025-08-07 19:27:50] ✅ Results saved (573 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.json
+[2025-08-07 19:27:50] 📋 Summary: Duration: 0:02:07.508686, Return code: 0
+[2025-08-07 19:27:50] 📊 Hardware metrics collected:
+[2025-08-07 19:27:50] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.csv (11504 bytes)
+[2025-08-07 19:27:50] gpu_power: gpu_power_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.csv (5337 bytes)
+[2025-08-07 19:27:50] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.csv (6213 bytes)
+[2025-08-07 19:27:50] cpu_*: cpu_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.csv (831 bytes)
+[2025-08-07 19:27:50] memory_*: memory_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.8_20250807_192431.csv (1171 bytes)
+[2025-08-07 19:27:50] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:27:50] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:27:50] ✅ Test completed successfuly
+[2025-08-07 19:27:50] ⏱️	Cooling period (30s)...
+[2025-08-07 19:27:50] 30s remaining...
+[2025-08-07 19:27:50] 20s remaining...
+[2025-08-07 19:27:50] 10s remaining...
+[2025-08-07 19:27:50] 3s remaining...
+[2025-08-07 19:27:50] 2s remaining...
+[2025-08-07 19:27:50] 1s remaining...
+[2025-08-07 19:27:50] 
+[2025-08-07 19:27:50] ==================================================
+[2025-08-07 19:27:50] Progress: 10/12 (83.3%)
+[2025-08-07 19:27:50] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:27:50] Benchmark: latency
+[2025-08-07 19:27:50] Configuration: 32 batch, float16
+[2025-08-07 19:27:50] 
+[2025-08-07 19:27:50] ====================================================================
+[2025-08-07 19:27:50] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9
+[2025-08-07 19:27:50] ====================================================================
+[2025-08-07 19:27:50] 📋 Configuration:
+[2025-08-07 19:27:50] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:27:50] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:27:50] Type: latency
+[2025-08-07 19:27:50] Batch Size: 32
+[2025-08-07 19:27:50] Input/Output Length: 128/128
+[2025-08-07 19:27:50] Data Type: float16
+[2025-08-07 19:27:50] Memory Utilization: 0.9
+[2025-08-07 19:27:50] Tensor Parallel: 1
+[2025-08-07 19:27:50] Max Length: 131072
+[2025-08-07 19:27:50] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.json
+[2025-08-07 19:27:50] 🔍 Starting hardware monitoring...
+[2025-08-07 19:27:50] Duration: 3660s
+[2025-08-07 19:27:50] Experiment ID: Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9
+[2025-08-07 19:27:50] ✅ Hardware monitoring started (PID: 2960997)
+[2025-08-07 19:27:50] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:27:50] 🚀 Starting container benchmark...
+[2025-08-07 19:27:50] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.log
+[2025-08-07 19:30:32] 📊 Namespace(input_len=128, output_len=128, batch_size=32, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:30:32] 📊 INFO 08-07 17:27:50 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:30:32] 📊 INFO 08-07 17:29:01 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 67.39 seconds
+[2025-08-07 19:30:32] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+[2025-08-07 19:30:32] 📊 Warmup iterations:  20%|██        | 1/5 [00:02<00:10,  2.58s/it]
+[2025-08-07 19:30:32] 📊 Warmup iterations:  40%|████      | 2/5 [00:03<00:05,  1.74s/it]
+[2025-08-07 19:30:32] 📊 Warmup iterations:  60%|██████    | 3/5 [00:04<00:02,  1.48s/it]INFO 08-07 17:29:07 [metrics.py:417] Avg prompt throughput: 3261.8 tokens/s, Avg generation throughput: 2452.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:30:32] 📊 Warmup iterations:  80%|████████  | 4/5 [00:06<00:01,  1.36s/it]
+[2025-08-07 19:30:32] 📊 Warmup iterations: 100%|██████████| 5/5 [00:07<00:00,  1.28s/it]
+[2025-08-07 19:30:32] 📊 Warmup iterations: 100%|██████████| 5/5 [00:07<00:00,  1.45s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  10%|█         | 1/10 [00:01<00:10,  1.15s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  20%|██        | 2/10 [00:02<00:09,  1.19s/it]INFO 08-07 17:29:12 [metrics.py:417] Avg prompt throughput: 3275.4 tokens/s, Avg generation throughput: 3480.1 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:30:32] 📊 Profiling iterations:  30%|███       | 3/10 [00:03<00:08,  1.19s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  40%|████      | 4/10 [00:04<00:07,  1.19s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  50%|█████     | 5/10 [00:05<00:05,  1.18s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  60%|██████    | 6/10 [00:07<00:04,  1.18s/it]INFO 08-07 17:29:17 [metrics.py:417] Avg prompt throughput: 3275.6 tokens/s, Avg generation throughput: 3505.9 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:30:32] 📊 Profiling iterations:  70%|███████   | 7/10 [00:08<00:03,  1.18s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  80%|████████  | 8/10 [00:09<00:02,  1.18s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations:  90%|█████████ | 9/10 [00:10<00:01,  1.17s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations: 100%|██████████| 10/10 [00:11<00:00,  1.23s/it]
+[2025-08-07 19:30:32] 📊 Profiling iterations: 100%|██████████| 10/10 [00:11<00:00,  1.20s/it]
+[2025-08-07 19:30:32] ✅ Results saved (574 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.json
+[2025-08-07 19:30:32] 📋 Summary: Duration: 0:02:08.578898, Return code: 0
+[2025-08-07 19:30:32] 📊 Hardware metrics collected:
+[2025-08-07 19:30:32] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.csv (11505 bytes)
+[2025-08-07 19:30:32] gpu_power: gpu_power_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.csv (5337 bytes)
+[2025-08-07 19:30:32] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.csv (6213 bytes)
+[2025-08-07 19:30:32] cpu_*: cpu_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.csv (855 bytes)
+[2025-08-07 19:30:32] memory_*: memory_Llama-3.1-8B_latency_bs32_in128_out128_float16_mem0.9_20250807_192716.csv (1212 bytes)
+[2025-08-07 19:30:32] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:30:32] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:30:32] ✅ Test completed successfuly
+[2025-08-07 19:30:32] ⏱️	Cooling period (30s)...
+[2025-08-07 19:30:32] 30s remaining...
+[2025-08-07 19:30:32] 20s remaining...
+[2025-08-07 19:30:32] 10s remaining...
+[2025-08-07 19:30:32] 3s remaining...
+[2025-08-07 19:30:32] 2s remaining...
+[2025-08-07 19:30:32] 1s remaining...
+[2025-08-07 19:30:32] 
+[2025-08-07 19:30:32] ==================================================
+[2025-08-07 19:30:32] Progress: 11/12 (91.7%)
+[2025-08-07 19:30:32] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:30:32] Benchmark: latency
+[2025-08-07 19:30:32] Configuration: 32 batch, float16
+[2025-08-07 19:30:32] 
+[2025-08-07 19:30:32] =====================================================================
+[2025-08-07 19:30:32] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8
+[2025-08-07 19:30:32] =====================================================================
+[2025-08-07 19:30:32] 📋 Configuration:
+[2025-08-07 19:30:32] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:30:32] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:30:32] Type: latency
+[2025-08-07 19:30:32] Batch Size: 32
+[2025-08-07 19:30:32] Input/Output Length: 128/1024
+[2025-08-07 19:30:32] Data Type: float16
+[2025-08-07 19:30:32] Memory Utilization: 0.8
+[2025-08-07 19:30:32] Tensor Parallel: 1
+[2025-08-07 19:30:32] Max Length: 131072
+[2025-08-07 19:30:32] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.json
+[2025-08-07 19:30:32] 🔍 Starting hardware monitoring...
+[2025-08-07 19:30:32] Duration: 3660s
+[2025-08-07 19:30:32] Experiment ID: Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8
+[2025-08-07 19:30:32] ✅ Hardware monitoring started (PID: 2971739)
+[2025-08-07 19:30:32] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:30:32] 🚀 Starting container benchmark...
+[2025-08-07 19:30:32] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.log
+[2025-08-07 19:34:34] 📊 Namespace(input_len=128, output_len=1024, batch_size=32, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.8, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:34:34] 📊 INFO 08-07 17:30:33 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:34:34] 📊 INFO 08-07 17:31:38 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 62.55 seconds
+[2025-08-07 19:34:34] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:31:44 [metrics.py:417] Avg prompt throughput: 819.0 tokens/s, Avg generation throughput: 2937.0 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Warmup iterations:  20%|██        | 1/5 [00:09<00:39,  9.97s/it]INFO 08-07 17:31:49 [metrics.py:417] Avg prompt throughput: 803.7 tokens/s, Avg generation throughput: 3553.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Warmup iterations:  40%|████      | 2/5 [00:19<00:28,  9.50s/it]INFO 08-07 17:31:59 [metrics.py:417] Avg prompt throughput: 818.7 tokens/s, Avg generation throughput: 3556.1 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.8%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Warmup iterations:  60%|██████    | 3/5 [00:28<00:18,  9.22s/it]INFO 08-07 17:32:09 [metrics.py:417] Avg prompt throughput: 818.9 tokens/s, Avg generation throughput: 3614.6 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Warmup iterations:  80%|████████  | 4/5 [00:36<00:09,  9.10s/it]INFO 08-07 17:32:19 [metrics.py:417] Avg prompt throughput: 818.3 tokens/s, Avg generation throughput: 3675.8 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Warmup iterations: 100%|██████████| 5/5 [00:45<00:00,  9.02s/it]
+[2025-08-07 19:34:34] 📊 Warmup iterations: 100%|██████████| 5/5 [00:45<00:00,  9.17s/it]
+[2025-08-07 19:34:34] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:32:29 [metrics.py:417] Avg prompt throughput: 818.7 tokens/s, Avg generation throughput: 3518.0 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  10%|█         | 1/10 [00:09<01:22,  9.17s/it]INFO 08-07 17:32:34 [metrics.py:417] Avg prompt throughput: 817.8 tokens/s, Avg generation throughput: 3526.6 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  20%|██        | 2/10 [00:18<01:12,  9.01s/it]INFO 08-07 17:32:44 [metrics.py:417] Avg prompt throughput: 818.0 tokens/s, Avg generation throughput: 3591.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  30%|███       | 3/10 [00:26<01:02,  8.95s/it]INFO 08-07 17:32:54 [metrics.py:417] Avg prompt throughput: 818.2 tokens/s, Avg generation throughput: 3643.4 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  40%|████      | 4/10 [00:35<00:53,  8.93s/it]INFO 08-07 17:33:04 [metrics.py:417] Avg prompt throughput: 818.1 tokens/s, Avg generation throughput: 3675.2 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  50%|█████     | 5/10 [00:45<00:45,  9.03s/it]INFO 08-07 17:33:14 [metrics.py:417] Avg prompt throughput: 819.2 tokens/s, Avg generation throughput: 3711.9 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  60%|██████    | 6/10 [00:53<00:35,  8.99s/it]INFO 08-07 17:33:19 [metrics.py:417] Avg prompt throughput: 818.7 tokens/s, Avg generation throughput: 3537.0 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  70%|███████   | 7/10 [01:02<00:26,  8.96s/it]INFO 08-07 17:33:29 [metrics.py:417] Avg prompt throughput: 818.1 tokens/s, Avg generation throughput: 3585.8 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  80%|████████  | 8/10 [01:11<00:17,  8.95s/it]INFO 08-07 17:33:39 [metrics.py:417] Avg prompt throughput: 818.1 tokens/s, Avg generation throughput: 3636.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations:  90%|█████████ | 9/10 [01:21<00:09,  9.04s/it]INFO 08-07 17:33:49 [metrics.py:417] Avg prompt throughput: 817.9 tokens/s, Avg generation throughput: 3680.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:34:34] 📊 Profiling iterations: 100%|██████████| 10/10 [01:29<00:00,  9.00s/it]
+[2025-08-07 19:34:34] 📊 Profiling iterations: 100%|██████████| 10/10 [01:29<00:00,  8.99s/it]
+[2025-08-07 19:34:35] ✅ Results saved (556 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.json
+[2025-08-07 19:34:35] 📋 Summary: Duration: 0:03:56.159347, Return code: 0
+[2025-08-07 19:34:35] 📊 Hardware metrics collected:
+[2025-08-07 19:34:35] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.csv (20432 bytes)
+[2025-08-07 19:34:35] gpu_power: gpu_power_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.csv (9453 bytes)
+[2025-08-07 19:34:35] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.csv (11001 bytes)
+[2025-08-07 19:34:35] cpu_*: cpu_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.csv (1441 bytes)
+[2025-08-07 19:34:35] memory_*: memory_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.8_20250807_193001.csv (2073 bytes)
+[2025-08-07 19:34:35] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:34:35] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:34:35] ✅ Test completed successfuly
+[2025-08-07 19:34:35] ⏱️	Cooling period (30s)...
+[2025-08-07 19:34:35] 30s remaining...
+[2025-08-07 19:34:35] 20s remaining...
+[2025-08-07 19:34:35] 10s remaining...
+[2025-08-07 19:34:35] 3s remaining...
+[2025-08-07 19:34:35] 2s remaining...
+[2025-08-07 19:34:35] 1s remaining...
+[2025-08-07 19:34:35] 
+[2025-08-07 19:34:35] ==================================================
+[2025-08-07 19:34:35] Progress: 12/12 (100.0%)
+[2025-08-07 19:34:35] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:34:35] Benchmark: latency
+[2025-08-07 19:34:35] Configuration: 32 batch, float16
+[2025-08-07 19:34:35] 
+[2025-08-07 19:34:35] =====================================================================
+[2025-08-07 19:36:52] 🧪 EXPERIMENT: Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9
+[2025-08-07 19:36:52] =====================================================================
+[2025-08-07 19:36:52] 📋 Configuration:
+[2025-08-07 19:36:52] Model: meta-llama/Llama-3.1-8B-Instruct
+[2025-08-07 19:36:52] Path: /home/carpincho/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main
+[2025-08-07 19:36:52] Type: latency
+[2025-08-07 19:36:52] Batch Size: 32
+[2025-08-07 19:36:52] Input/Output Length: 128/1024
+[2025-08-07 19:36:52] Data Type: float16
+[2025-08-07 19:36:52] Memory Utilization: 0.9
+[2025-08-07 19:36:52] Tensor Parallel: 1
+[2025-08-07 19:36:52] Max Length: 131072
+[2025-08-07 19:36:52] 📁 Results will be saved to: /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.json
+[2025-08-07 19:36:52] 🔍 Starting hardware monitoring...
+[2025-08-07 19:36:52] Duration: 3660s
+[2025-08-07 19:36:52] Experiment ID: Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9
+[2025-08-07 19:36:52] ✅ Hardware monitoring started (PID: 2990042)
+[2025-08-07 19:36:52] ⏳ Waiting for monitoring initialization...
+[2025-08-07 19:36:52] 🚀 Starting container benchmark...
+[2025-08-07 19:36:52] 📝 Logs: /home/carpincho/experiments/03-results/logs/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.log
+[2025-08-07 19:36:52] 📊 Namespace(input_len=128, output_len=1024, batch_size=32, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+[2025-08-07 19:36:52] 📊 INFO 08-07 17:35:05 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False,
+[2025-08-07 19:36:52] 📊 INFO 08-07 17:36:11 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 62.62 seconds
+[2025-08-07 19:36:52] 📊 Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]INFO 08-07 17:36:17 [metrics.py:417] Avg prompt throughput: 819.1 tokens/s, Avg generation throughput: 2764.3 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:36:52] 📊 Warmup iterations:  20%|██        | 1/5 [00:10<00:40, 10.23s/it]INFO 08-07 17:36:27 [metrics.py:417] Avg prompt throughput: 819.1 tokens/s, Avg generation throughput: 3692.4 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:36:52] 📊 Warmup iterations:  40%|████      | 2/5 [00:19<00:28,  9.50s/it]INFO 08-07 17:36:32 [metrics.py:417] Avg prompt throughput: 819.1 tokens/s, Avg generation throughput: 3538.6 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:36:52] 📊 Warmup iterations:  60%|██████    | 3/5 [00:28<00:18,  9.25s/it]INFO 08-07 17:36:42 [metrics.py:417] Avg prompt throughput: 819.0 tokens/s, Avg generation throughput: 3583.3 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Warmup iterations:  80%|████████  | 4/5 [00:37<00:09,  9.13s/it]INFO 08-07 17:36:52 [metrics.py:417] Avg prompt throughput: 819.0 tokens/s, Avg generation throughput: 3640.9 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Warmup iterations: 100%|██████████| 5/5 [00:46<00:00,  9.16s/it]
+[2025-08-07 19:38:38] 📊 Warmup iterations: 100%|██████████| 5/5 [00:46<00:00,  9.27s/it]
+[2025-08-07 19:38:38] 📊 Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:37:02 [metrics.py:417] Avg prompt throughput: 818.4 tokens/s, Avg generation throughput: 3676.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  10%|█         | 1/10 [00:08<01:20,  8.95s/it]INFO 08-07 17:37:12 [metrics.py:417] Avg prompt throughput: 819.0 tokens/s, Avg generation throughput: 3717.6 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  20%|██        | 2/10 [00:17<01:11,  8.95s/it]INFO 08-07 17:37:17 [metrics.py:417] Avg prompt throughput: 818.7 tokens/s, Avg generation throughput: 3537.2 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  30%|███       | 3/10 [00:26<01:02,  8.94s/it]INFO 08-07 17:37:27 [metrics.py:417] Avg prompt throughput: 818.6 tokens/s, Avg generation throughput: 3600.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  40%|████      | 4/10 [00:35<00:53,  8.94s/it]INFO 08-07 17:37:37 [metrics.py:417] Avg prompt throughput: 818.2 tokens/s, Avg generation throughput: 3413.4 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  50%|█████     | 5/10 [00:45<00:45,  9.06s/it]INFO 08-07 17:37:47 [metrics.py:417] Avg prompt throughput: 819.1 tokens/s, Avg generation throughput: 3673.4 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  60%|██████    | 6/10 [00:53<00:36,  9.02s/it]INFO 08-07 17:37:57 [metrics.py:417] Avg prompt throughput: 819.0 tokens/s, Avg generation throughput: 3717.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  70%|███████   | 7/10 [01:02<00:26,  9.00s/it]INFO 08-07 17:38:02 [metrics.py:417] Avg prompt throughput: 818.2 tokens/s, Avg generation throughput: 3534.9 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  80%|████████  | 8/10 [01:11<00:17,  8.98s/it]INFO 08-07 17:38:12 [metrics.py:417] Avg prompt throughput: 819.2 tokens/s, Avg generation throughput: 3590.2 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations:  90%|█████████ | 9/10 [01:21<00:09,  9.06s/it]INFO 08-07 17:38:22 [metrics.py:417] Avg prompt throughput: 818.0 tokens/s, Avg generation throughput: 3623.4 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%.
+[2025-08-07 19:38:38] 📊 Profiling iterations: 100%|██████████| 10/10 [01:30<00:00,  9.03s/it]
+[2025-08-07 19:38:38] 📊 Profiling iterations: 100%|██████████| 10/10 [01:30<00:00,  9.01s/it]
+[2025-08-07 19:38:38] ✅ Results saved (557 bytes): /home/carpincho/experiments/03-results/containerized/Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.json
+[2025-08-07 19:38:38] 📋 Summary: Duration: 0:03:56.550537, Return code: 0
+[2025-08-07 19:38:38] 📊 Hardware metrics collected:
+[2025-08-07 19:38:38] gpu_usage: gpu_usage_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.csv (20433 bytes)
+[2025-08-07 19:38:38] gpu_power: gpu_power_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.csv (9453 bytes)
+[2025-08-07 19:38:38] gpu_temp: gpu_temp_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.csv (11001 bytes)
+[2025-08-07 19:38:38] cpu_*: cpu_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.csv (1441 bytes)
+[2025-08-07 19:38:38] memory_*: memory_Llama-3.1-8B_latency_bs32_in128_out1024_float16_mem0.9_20250807_193434.csv (2073 bytes)
+[2025-08-07 19:38:38] ⏹️  Stopping hardware monitoring...
+[2025-08-07 19:38:38] ✅ Hardware monitoring stopped gracefully
+[2025-08-07 19:38:38] ✅ Test completed successfuly
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] === Benchmark Suite Completed ===
+[2025-08-07 19:38:38] Total tests: 12
+[2025-08-07 19:38:38] Completed: 12
+[2025-08-07 19:38:38] Failed: 0
+[2025-08-07 19:38:38] Success rate: 100.0
+[2025-08-07 19:38:38] Results directory: /home/carpincho/experiments/03-results
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] === Detailed Experiment Summary ===
+[2025-08-07 19:38:38] Total planned tests: 12
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] Models:
+[2025-08-07 19:38:38] meta-llama/Llama-3.1-8B-Instruct: 12 tests
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] Benchmarks:
+[2025-08-07 19:38:38] latency: 12 tests
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] Batch sizes:
+[2025-08-07 19:38:38] 1: 4 tests
+[2025-08-07 19:38:38] 8: 4 tests
+[2025-08-07 19:38:38] 32: 4 tests
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] Input lengths:
+[2025-08-07 19:38:38] 128: 12 tests
+[2025-08-07 19:38:38] 
+[2025-08-07 19:38:38] Data types:
+[2025-08-07 19:38:38] float16: 12 tests
+[2025-08-07 19:38:38] Cleaning up container: vllm-benchmark-32008-2892058
+
+=====================================
+vLLM Benchmark Suite Completed
+End timestamp: Thu Aug  7 07:38:38 PM CEST 2025
+=====================================

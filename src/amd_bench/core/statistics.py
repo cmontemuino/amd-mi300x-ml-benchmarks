@@ -5,9 +5,9 @@ from typing import Dict, List
 
 import pandas as pd
 
-from ..schemas.benchmark import BenchmarkResult
-from ..utils.logging import get_logger
-from ..utils.paths import ensure_directory
+from amd_bench.schemas.benchmark import BenchmarkResult
+from amd_bench.utils.logging import get_logger
+from amd_bench.utils.paths import ensure_directory
 
 logger = get_logger(__name__)
 

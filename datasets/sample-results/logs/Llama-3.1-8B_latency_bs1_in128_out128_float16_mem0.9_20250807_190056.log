@@ -1,0 +1,118 @@
+=== Benchmark Execution Log ===
+Start time: 2025-08-07T19:01:01.901704
+Command: nerdctl run --rm --device=/dev/kfd --device=/dev/dri --group-add video --shm-size 32G --memory 256G --cpus 32 --security-opt seccomp=unconfined --security-opt apparmor=unconfined --cap-add=SYS_PTRACE -v /home/carpincho/experiments:/workspace:rw -v /home/carpincho/models:/models:r --workdir /workspace --name vllm-benchmark-32008-2892058 --env HF_HOME=/workspace/models --env HF_HUB_OFFLINE=1 --env VLLM_USE_V1=0 --env VLLM_WORKER_MULTIPROC_METHOD=spawn --env OMP_NUM_THREADS=32 --env MKL_NUM_THREADS=32 --env ROCM_PATH=/opt/rocm --env HCC_AMDGPU_TARGET=gfx90a --env PYTORCH_HIP_ALLOC_CONF=max_split_size_mb:512 --env VLLM_LOGGING_LEVEL=INFO rocm/vllm:rocm6.4.1_vllm_0.9.1_20250715 python3 /app/vllm/benchmarks/benchmark_latency.py --model /models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main --batch-size 1 --input-len 128 --output-len 128 --dtype float16 --gpu-memory-utilization 0.9 --max-model-len 131072 --tensor-parallel-size 1 --trust-remote-code --output-json /workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.json --num-iters-warmup 5 --num-iters 10
+
+time="2025-08-07T19:01:01+02:00" level=warning msg="unsupported volume option \"r\""
+time="2025-08-07T19:01:01+02:00" level=warning msg="default network named \"bridge\" does not have an internal nerdctl ID or nerdctl-managed config file, it was most likely NOT created by nerdctl"
+INFO 08-07 17:01:05 [__init__.py:244] Automatically detected platform rocm.
+Namespace(input_len=128, output_len=128, batch_size=1, n=1, use_beam_search=False, num_iters_warmup=5, num_iters=10, profile=False, output_json='/workspace/03-results/containerized/Llama-3.1-8B_latency_bs1_in128_out128_float16_mem0.9_20250807_190056.json', disable_detokenize=False, model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', task='auto', tokenizer=None, tokenizer_mode='auto', trust_remote_code=True, dtype='float16', seed=None, hf_config_path=None, allowed_local_media_path='', revision=None, code_revision=None, rope_scaling={}, rope_theta=None, tokenizer_revision=None, max_model_len=131072, quantization=None, enforce_eager=False, max_seq_len_to_capture=8192, max_logprobs=20, disable_sliding_window=False, disable_cascade_attn=False, skip_tokenizer_init=False, enable_prompt_embeds=False, served_model_name=None, disable_async_output_proc=False, config_format='auto', hf_token=None, hf_overrides={}, override_neuron_config={}, override_pooler_config=None, logits_processor_pattern=None, generation_config='auto', override_generation_config={}, enable_sleep_mode=False, model_impl='auto', override_attention_dtype=None, load_format='auto', download_dir=None, model_loader_extra_config={}, ignore_patterns=None, use_tqdm_on_load=True, qlora_adapter_name_or_path=None, pt_load_map_location='cpu', guided_decoding_backend='xgrammar', guided_decoding_disable_fallback=False, guided_decoding_disable_any_whitespace=False, guided_decoding_disable_additional_properties=False, enable_reasoning=None, reasoning_parser='', distributed_executor_backend=None, pipeline_parallel_size=1, tensor_parallel_size=1, data_parallel_size=1, data_parallel_size_local=None, data_parallel_address=None, data_parallel_rpc_port=None, data_parallel_backend='mp', enable_expert_parallel=False, enable_eplb=False, num_redundant_experts=0, eplb_window_size=1000, eplb_step_interval=3000, eplb_log_balancedness=False, max_parallel_loading_workers=None, ray_workers_use_nsight=False, disable_custom_all_reduce=False, worker_cls='auto', worker_extension_cls='', enable_multimodal_encoder_data_parallel=False, block_size=None, gpu_memory_utilization=0.9, swap_space=4, kv_cache_dtype='auto', num_gpu_blocks_override=None, enable_prefix_caching=False, prefix_caching_hash_algo='builtin', cpu_offload_gb=0, calculate_kv_scales=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config={}, limit_mm_per_prompt={}, mm_processor_kwargs=None, disable_mm_preprocessor_cache=False, enable_lora=None, enable_lora_bias=False, max_loras=1, max_lora_rank=16, lora_extra_vocab_size=256, lora_dtype='auto', long_lora_scaling_factors=None, max_cpu_loras=None, fully_sharded_loras=False, enable_prompt_adapter=None, max_prompt_adapters=1, max_prompt_adapter_token=0, device='auto', speculative_config=None, show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, max_num_batched_tokens=None, max_num_seqs=None, max_num_partial_prefills=1, max_long_partial_prefills=1, cuda_graph_sizes=[512], long_prefill_token_threshold=0, num_lookahead_slots=0, scheduler_delay_factor=0.0, preemption_mode=None, num_scheduler_steps=1, multi_step_stream_outputs=True, scheduling_policy='fcfs', enable_chunked_prefill=None, disable_chunked_mm_input=False, scheduler_cls='vllm.core.scheduler.Scheduler', disable_hybrid_kv_cache_manager=False, kv_transfer_config=None, kv_events_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":[],"use_inductor":true,"compile_sizes":null,"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":null,"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":null,"local_cache_dir":null}, additional_config={}, use_v2_block_manager=True, disable_log_stats=False)
+INFO 08-07 17:01:27 [config.py:853] This model supports multiple tasks: {'generate', 'embed', 'score', 'reward', 'classify'}. Defaulting to 'generate'.
+WARNING 08-07 17:01:27 [config.py:3348] Casting torch.bfloat16 to torch.float16.
+INFO 08-07 17:01:27 [config.py:1467] Using max model len 131072
+WARNING 08-07 17:01:27 [arg_utils.py:1526] The model has a long context length (131072). This may causeOOM during the initial memory profiling phase, or result in low performance due to small KV cache size. Consider setting --max-model-len to a smaller value.
+INFO 08-07 17:01:27 [llm_engine.py:230] Initializing a V0 LLM engine (v0.9.2.dev364+gb432b7a28) with config: model='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', speculative_config=None, tokenizer='/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=True, dtype=torch.float16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=1, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='xgrammar', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=None, served_model_name=/models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=False, chunked_prefill_enabled=False, use_async_output_proc=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+silu_and_mul"],"splitting_ops":[],"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":false,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2,1],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":256,"local_cache_dir":null}, use_cached_outputs=False, 
+INFO 08-07 17:01:29 [rocm.py:233] Using ROCmFlashAttention backend.
+[W807 17:01:29.487315357 socket.cpp:200] [c10d] The hostname of the client socket cannot be retrieved. err=-3
+[W807 17:01:29.490226336 socket.cpp:200] [c10d] The hostname of the client socket cannot be retrieved. err=-3
+INFO 08-07 17:01:29 [parallel_state.py:1076] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+INFO 08-07 17:01:29 [model_runner.py:1171] Starting to load model /models/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/main...
+
+Loading safetensors checkpoint shards:   0% Completed | 0/4 [00:00<?, ?it/s]
+
+Loading safetensors checkpoint shards:  25% Completed | 1/4 [00:00<00:00,  3.06it/s]
+
+Loading safetensors checkpoint shards:  50% Completed | 2/4 [00:00<00:00,  2.73it/s]
+
+Loading safetensors checkpoint shards:  75% Completed | 3/4 [00:01<00:00,  2.74it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  3.62it/s]
+
+Loading safetensors checkpoint shards: 100% Completed | 4/4 [00:01<00:00,  3.27it/s]
+
+INFO 08-07 17:01:30 [default_loader.py:272] Loading weights took 1.25 seconds
+INFO 08-07 17:01:31 [model_runner.py:1203] Model loading took 15.3047 GiB and 1.575664 seconds
+INFO 08-07 17:01:57 [worker.py:294] Memory profiling takes 26.25 seconds
+INFO 08-07 17:01:57 [worker.py:294] the current vLLM instance can use total_gpu_memory (191.98GiB) x gpu_memory_utilization (0.90) = 172.79GiB
+INFO 08-07 17:01:57 [worker.py:294] model weights take 15.30GiB; non_torch_memory takes 0.66GiB; PyTorch activation peak memory takes 14.63GiB; the rest of the memory reserved for KV Cache is 142.19GiB.
+INFO 08-07 17:01:57 [executor_base.py:113] # rocm blocks: 72800, # CPU blocks: 2048
+INFO 08-07 17:01:57 [executor_base.py:118] Maximum concurrency for 131072 tokens per request: 8.89x
+INFO 08-07 17:01:58 [model_runner.py:1513] Capturing cudagraphs for decoding. This may lead to unexpected consequences if the model is not static. To run the model in eager mode, set 'enforce_eager=True' or use '--enforce-eager' in the CLI. If out-of-memory error occurs during cudagraph capture, consider decreasing `gpu_memory_utilization` or switching to eager mode. You can also reduce the `max_num_seqs` as needed to decrease memory usage.
+
+Capturing CUDA graph shapes:   0%|          | 0/35 [00:00<?, ?it/s]
+Capturing CUDA graph shapes:   3%|▎         | 1/35 [00:00<00:21,  1.56it/s]
+Capturing CUDA graph shapes:   6%|▌         | 2/35 [00:01<00:18,  1.79it/s]
+Capturing CUDA graph shapes:   9%|▊         | 3/35 [00:01<00:13,  2.30it/s]
+Capturing CUDA graph shapes:  11%|█▏        | 4/35 [00:01<00:11,  2.67it/s]
+Capturing CUDA graph shapes:  14%|█▍        | 5/35 [00:01<00:10,  2.94it/s]
+Capturing CUDA graph shapes:  17%|█▋        | 6/35 [00:02<00:09,  3.13it/s]
+Capturing CUDA graph shapes:  20%|██        | 7/35 [00:02<00:08,  3.27it/s]
+Capturing CUDA graph shapes:  23%|██▎       | 8/35 [00:02<00:08,  3.36it/s]
+Capturing CUDA graph shapes:  26%|██▌       | 9/35 [00:03<00:07,  3.43it/s]
+Capturing CUDA graph shapes:  29%|██▊       | 10/35 [00:03<00:07,  3.42it/s]
+Capturing CUDA graph shapes:  31%|███▏      | 11/35 [00:03<00:06,  3.47it/s]
+Capturing CUDA graph shapes:  34%|███▍      | 12/35 [00:03<00:06,  3.51it/s]
+Capturing CUDA graph shapes:  37%|███▋      | 13/35 [00:04<00:06,  3.54it/s]
+Capturing CUDA graph shapes:  40%|████      | 14/35 [00:28<02:39,  7.60s/it]
+Capturing CUDA graph shapes:  43%|████▎     | 15/35 [00:29<01:47,  5.39s/it]
+Capturing CUDA graph shapes:  46%|████▌     | 16/35 [00:29<01:13,  3.85s/it]
+Capturing CUDA graph shapes:  49%|████▊     | 17/35 [00:29<00:49,  2.78s/it]
+Capturing CUDA graph shapes:  51%|█████▏    | 18/35 [00:29<00:34,  2.03s/it]
+Capturing CUDA graph shapes:  54%|█████▍    | 19/35 [00:30<00:24,  1.50s/it]
+Capturing CUDA graph shapes:  57%|█████▋    | 20/35 [00:30<00:17,  1.13s/it]
+Capturing CUDA graph shapes:  60%|██████    | 21/35 [00:30<00:12,  1.14it/s]
+Capturing CUDA graph shapes:  63%|██████▎   | 22/35 [00:30<00:09,  1.43it/s]
+Capturing CUDA graph shapes:  66%|██████▌   | 23/35 [00:31<00:06,  1.74it/s]
+Capturing CUDA graph shapes:  69%|██████▊   | 24/35 [00:31<00:05,  2.06it/s]
+Capturing CUDA graph shapes:  71%|███████▏  | 25/35 [00:31<00:04,  2.37it/s]
+Capturing CUDA graph shapes:  74%|███████▍  | 26/35 [00:32<00:03,  2.64it/s]
+Capturing CUDA graph shapes:  77%|███████▋  | 27/35 [00:32<00:02,  2.88it/s]
+Capturing CUDA graph shapes:  80%|████████  | 28/35 [00:32<00:02,  3.07it/s]
+Capturing CUDA graph shapes:  83%|████████▎ | 29/35 [00:32<00:01,  3.23it/s]
+Capturing CUDA graph shapes:  86%|████████▌ | 30/35 [00:33<00:01,  3.34it/s]
+Capturing CUDA graph shapes:  89%|████████▊ | 31/35 [00:33<00:01,  3.43it/s]
+Capturing CUDA graph shapes:  91%|█████████▏| 32/35 [00:33<00:00,  3.49it/s]
+Capturing CUDA graph shapes:  94%|█████████▍| 33/35 [00:34<00:00,  3.55it/s]
+Capturing CUDA graph shapes:  97%|█████████▋| 34/35 [00:34<00:00,  3.61it/s]
+Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:34<00:00,  3.66it/s]
+Capturing CUDA graph shapes: 100%|██████████| 35/35 [00:34<00:00,  1.01it/s]
+INFO 08-07 17:02:33 [model_runner.py:1671] Graph capturing finished in 35 secs, took 0.43 GiB
+INFO 08-07 17:02:33 [llm_engine.py:428] init engine (profile, create kv cache, warmup model) took 61.89 seconds
+SamplingParams(n=1, presence_penalty=0.0, frequency_penalty=0.0, repetition_penalty=1.0, temperature=1.0, top_p=1.0, top_k=0, min_p=0.0, seed=None, stop=[], stop_token_ids=[], bad_words=[], include_stop_str_in_output=False, ignore_eos=True, max_tokens=128, min_tokens=0, logprobs=None, prompt_logprobs=None, skip_special_tokens=True, spaces_between_special_tokens=True, truncate_prompt_tokens=None, guided_decoding=None, extra_args=None)
+Warming up...
+
+Warmup iterations:   0%|          | 0/5 [00:00<?, ?it/s]
+Warmup iterations:  20%|██        | 1/5 [00:01<00:07,  1.84s/it]
+Warmup iterations:  40%|████      | 2/5 [00:02<00:03,  1.18s/it]
+Warmup iterations:  60%|██████    | 3/5 [00:03<00:01,  1.04it/s]
+Warmup iterations:  80%|████████  | 4/5 [00:03<00:00,  1.16it/s]
+Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.24it/s]
+Warmup iterations: 100%|██████████| 5/5 [00:04<00:00,  1.07it/s]
+
+Profiling iterations:   0%|          | 0/10 [00:00<?, ?it/s]INFO 08-07 17:02:38 [metrics.py:417] Avg prompt throughput: 153.6 tokens/s, Avg generation throughput: 139.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+
+Profiling iterations:  10%|█         | 1/10 [00:00<00:06,  1.40it/s]
+Profiling iterations:  20%|██        | 2/10 [00:01<00:05,  1.40it/s]
+Profiling iterations:  30%|███       | 3/10 [00:02<00:05,  1.40it/s]
+Profiling iterations:  40%|████      | 4/10 [00:02<00:04,  1.40it/s]
+Profiling iterations:  50%|█████     | 5/10 [00:03<00:03,  1.40it/s]
+Profiling iterations:  60%|██████    | 6/10 [00:04<00:02,  1.40it/s]
+Profiling iterations:  70%|███████   | 7/10 [00:05<00:02,  1.40it/s]INFO 08-07 17:02:43 [metrics.py:417] Avg prompt throughput: 179.2 tokens/s, Avg generation throughput: 179.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%.
+
+Profiling iterations:  80%|████████  | 8/10 [00:05<00:01,  1.40it/s]
+Profiling iterations:  90%|█████████ | 9/10 [00:06<00:00,  1.40it/s]
+Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.40it/s]
+Profiling iterations: 100%|██████████| 10/10 [00:07<00:00,  1.40it/s]
+Avg latency: 0.7152210914064199 seconds
+10% percentile latency: 0.7137489343760535 seconds
+25% percentile latency: 0.7140228694770485 seconds
+50% percentile latency: 0.7149253149982542 seconds
+75% percentile latency: 0.7164353752450552 seconds
+90% percentile latency: 0.717236855335068 seconds
+99% percentile latency: 0.7188168032944668 seconds
+[rank0]:[W807 17:02:45.247609838 ProcessGroupNCCL.cpp:1476] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+
+=== Execution Summary ===
+End time: 2025-08-07T19:02:53.224267
+Duration: 0:01:51.322563
+Return code: 0
+Success: True

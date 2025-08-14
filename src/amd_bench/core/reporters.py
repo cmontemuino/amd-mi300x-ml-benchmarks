@@ -5,15 +5,56 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO
 
-from ..schemas.benchmark import AnalysisConfig, BenchmarkResult
-from ..utils.logging import get_logger
-from ..utils.paths import ensure_directory
+import pandas as pd
+
+from amd_bench.schemas.benchmark import AnalysisConfig, BenchmarkResult
+from amd_bench.utils.logging import get_logger
+from amd_bench.utils.paths import ensure_directory
 
 logger = get_logger(__name__)
 
 
 class ReportGenerator:
-    """Generates analysis reports in multiple formats."""
+    """Generates analysis reports in multiple formats.
+
+    This class creates comprehensive reports from benchmark analysis results, supporting
+    both human-readable markdown reports and machine-readable JSON summaries. It handles
+    statistical formatting, and monitoring data integration.
+
+    The ReportGenerator produces:
+    - **Markdown Reports**: Detailed analysis with tables, insights, and recommendations
+    - **JSON Summaries**: Structured data for programmatic consumption
+    - **Executive Summaries**: High-level performance insights
+    - **Configuration Analysis**: Optimal parameter recommendations
+
+    Attributes:
+        config (AnalysisConfig): Configuration settings for analysis scope and format.
+        results (List[BenchmarkResult]): Processed benchmark results data.
+        stats_analyzer (StatisticalAnalyzer): Statistical analysis engine for summaries.
+
+    Example:
+        ```
+        # Basic usage
+        config = AnalysisConfig(input_dir=Path("data"), output_dir=Path("output"))
+        results = analyzer.load_results()
+        stats = StatisticalAnalyzer(results)
+
+        generator = ReportGenerator(config, results, stats)
+        reports = generator.create_reports(Path("reports"))
+
+        print(f"Generated reports: {list(reports.keys())}")
+        # Output: ['markdown', 'json']
+
+        # Access generated files
+        markdown_report = reports['markdown']
+        json_summary = reports['json']
+        ```
+
+    Note:
+        Report generation scales with dataset size. Large datasets with monitoring
+        data may require additional processing time for comprehensive analysis.
+        All reports include metadata about generation time and data sources.
+    """
 
     def __init__(
         self,
@@ -26,7 +67,9 @@ class ReportGenerator:
         self.results = results
         self.stats_analyzer = stats_analyzer
 
-    def create_reports(self, output_dir: Path) -> Dict[str, Path]:
+    def create_reports(
+        self, output_dir: Path, monitoring_dataframes: Dict[str, pd.DataFrame]
+    ) -> Dict[str, Path]:
         """Create all report formats."""
         output_dir = ensure_directory(output_dir)
 
@@ -34,7 +77,7 @@ class ReportGenerator:
 
         # Markdown report
         markdown_path = output_dir / "benchmark_analysis_report.md"
-        self._create_markdown_report(markdown_path)
+        self._create_markdown_report(markdown_path, monitoring_dataframes)
         generated_reports["markdown"] = markdown_path
 
         # JSON summary
@@ -45,11 +88,13 @@ class ReportGenerator:
         logger.info(f"Generated {len(generated_reports)} reports in {output_dir}")
         return generated_reports
 
-    def _create_markdown_report(self, path: Path) -> None:
+    def _create_markdown_report(
+        self, path: Path, monitoring_dataframes: Dict[str, pd.DataFrame]
+    ) -> None:
         """Create comprehensive markdown analysis report."""
         with open(path, "w", encoding="utf-8") as f:
             # Header
-            f.write("# Benchmark Analysis Report\n\n")
+            f.write("# Benchmark Analysis Report\n")
             f.write(f"**Generated**: {self._get_current_timestamp()}\n")
             f.write(f"**Total Results**: {len(self.results)}\n")
             f.write(f"**Input Directory**: {self.config.input_dir}\n\n")
@@ -73,6 +118,16 @@ class ReportGenerator:
             # Key Findings
             f.write("\n## Key Findings\n\n")
             self._write_key_findings(f)
+
+            # System Monitoring Analysis
+            if monitoring_dataframes:
+                f.write("## System Monitoring Analysis\n\n")
+                self._write_monitoring_analysis_section(
+                    f,
+                    monitoring_dataframes["monitoring_summary"],
+                    monitoring_dataframes["thermal_analysis"],
+                    monitoring_dataframes["power_analysis"],
+                )
 
         logger.info(f"Markdown report created: {path}")
 
@@ -143,26 +198,24 @@ class ReportGenerator:
             best_latency = min(self.results, key=lambda r: r.metrics.avg_latency)
             best_throughput = max(self.results, key=lambda r: r.metrics.throughput)
 
-            file.write("### Optimal Configurations\n\n")
-            file.write(f"**Best Latency**: {best_latency.model_short_name} ")
+            file.write("### Optimal Configurations\n")
+            file.write(f"- **Best Latency**: {best_latency.model_short_name} ")
             file.write(
                 f"(bs={best_latency.config.batch_size}, mem={best_latency.config.memory_util}) "
             )
-            file.write(f"- {best_latency.metrics.avg_latency:.4f}s\n\n")
+            file.write(f"- {best_latency.metrics.avg_latency:.4f}s\n")
 
-            file.write(f"**Best Throughput**: {best_throughput.model_short_name} ")
+            file.write(f"- **Best Throughput**: {best_throughput.model_short_name} ")
             file.write(
                 f"(bs={best_throughput.config.batch_size}, mem={best_throughput.config.memory_util}) "
             )
-            file.write(f"- {best_throughput.metrics.throughput:.2f} req/s\n\n")
+            file.write(f"- {best_throughput.metrics.throughput:.2f} req/s\n")
 
     def _write_key_findings(self, file: TextIO) -> None:
         """Write key findings section."""
         if not self.results:
             file.write("No data available for analysis.\n\n")
             return
-
-        file.write("### Key Findings\n\n")
 
         # Performance insights
         models = {r.model_short_name for r in self.results}
@@ -195,6 +248,103 @@ class ReportGenerator:
             file.write(f"4. **Memory Utilization**: Average {avg_mem_util:.2f} across all tests\n")
 
         file.write("\n")
+
+    @staticmethod
+    def _write_monitoring_analysis_section(
+        file: TextIO,
+        monitoring_summaries: pd.DataFrame,
+        thermal_analysis: pd.DataFrame,
+        power_analysis: pd.DataFrame,
+    ) -> None:
+        """Write comprehensive monitoring analysis section."""
+
+        if monitoring_summaries.empty and thermal_analysis.empty and power_analysis.empty:
+            return
+
+        # Power efficiency insights
+        if not power_analysis.empty:
+            avg_power = power_analysis["avg_total_power"].mean()
+            max_power = power_analysis["max_total_power"].max()
+            avg_efficiency_all = power_analysis["power_efficiency_all"].mean()
+            power_stability = power_analysis["power_stability"].std()
+
+            file.write("### Power Consumption Analysis - All Available GPUs\n\n")
+            num_all_gpus = int(power_analysis["num_gpus_monitored"].max())
+            file.write(
+                f"- **Average Total Power Consumption**: {avg_power:.1f}W across **total** {num_all_gpus}x MI300X GPUs\n"
+            )
+            file.write(f"  - **Peak Power Draw**: {max_power:.1f}W\n")
+            file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_all:.1f}W\n")
+            file.write(f"- **Power Stability**: {power_stability:.2f}W variation\n\n")
+
+            # Include efficiency insights for active GPUs, if available
+            file.write("### Power Consumption Analysis - Active GPUs Only\n\n")
+            if "avg_active_power" in power_analysis:
+                num_active_gpus = int(power_analysis["num_active_gpus"].max())
+                avg_active_power = power_analysis["avg_active_power"].mean()
+                avg_efficiency_active = power_analysis["power_efficiency_active"].mean()
+                file.write(
+                    f"- **Average Total Power Consumption**: {avg_active_power:.1f}W across **active** {num_active_gpus}x MI300X GPUs\n"
+                )
+                file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_active:.1f}W\n")
+
+        # Thermal analysis
+        if not thermal_analysis.empty:
+            max_edge_temp = thermal_analysis["max_edge_temp"].max()
+            avg_edge_temp = thermal_analysis["avg_edge_temp"].mean()
+            max_junction_temp = thermal_analysis["max_junction_temp"].max()
+            thermal_risk_count = thermal_analysis["thermal_throttling_risk"].sum()
+
+            file.write("### Thermal Performance\n\n")
+
+            edge_temperature_note = (
+                "(excellent cooling ✅)" if max_edge_temp < max_junction_temp else ""
+            )
+            file.write(f"- **Peak Edge Temperature**: {max_edge_temp}°C {edge_temperature_note}\n")
+
+            temperature_headroom = 90 - max_junction_temp
+            junction_temperature_note = (
+                f"{temperature_headroom}°C below throttling threshold ✅"
+                if temperature_headroom > 0
+                else "⚠️ throttling threshold exceeded. Please investigate ⚠️"
+            )
+            file.write(
+                f"- **Peak Junction Temperature**: {max_junction_temp}°C ({junction_temperature_note})\n"
+            )
+
+            file.write(f"- **Average Operating Temperature**: {avg_edge_temp:.1f}°C (edge)\n")
+            thermal_note = (
+                "**No thermal throttling events across all tests** ✅"
+                if thermal_risk_count == 0
+                else f"**Thermal Throttling Events**: {thermal_risk_count} out of {len(thermal_analysis)} experiments ⚠️"
+            )
+            file.write(f"- {thermal_note}\n")
+
+            std_temp_stability = thermal_analysis["temp_stability"].std()
+            file.write(f"- **Temperature stability**: {std_temp_stability:.1f}°C\n\n")
+
+            file.write(
+                """> **Note**: Edge vs. junction temperatures are different sensors. Junction temperature is
+            typically 5-15°C higher than edge temperature and is the critical metric for throttling decisions.\n\n"""
+            )
+
+        # System stability from monitoring summaries
+        avg_cpu_usage = monitoring_summaries["avg_cpu_usage"].mean()
+        avg_duration = monitoring_summaries["duration_seconds"].mean()
+        cpu_stability = monitoring_summaries["cpu_stability"].std()
+
+        file.write("### System Stability\n\n")
+        if avg_cpu_usage < 15:
+            avg_cpu_usage_note = "confirms GPU-bound workloads ✅"
+        elif avg_cpu_usage < 50:
+            avg_cpu_usage_note = ">15% CPU usage during pure inference workloads indicates inefficient GPU utilization ⚠️"
+        else:
+            avg_cpu_usage_note = (
+                ">50% CPU usage with low GPU utilization is a clear indication of CPU bottleneck ⚠️"
+            )
+        file.write(f"- **CPU Utilization (avg)**: {avg_cpu_usage:.2f}% ({avg_cpu_usage_note})\n")
+        file.write(f"- **Experiment Duration (avg)**: {avg_duration/60:.1f} minutes\n")
+        file.write(f"- **CPU Load Stability**: {cpu_stability:.2f}% variation\n")
 
     def _create_json_summary(self, path: Path) -> None:
         """Create JSON summary of analysis results."""

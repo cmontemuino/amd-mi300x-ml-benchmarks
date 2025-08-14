@@ -18,7 +18,11 @@ def basic_usage_example() -> BenchmarkAnalyzer:
     """Basic usage with default configuration using sample dataset"""
     sample_path = get_sample_dataset_path()
 
-    config = AnalysisConfig(input_dir=sample_path, output_dir=Path("analysis/sample-output"))
+    config = AnalysisConfig(
+        input_dir=sample_path,
+        output_dir=Path("analysis/sample-output"),
+        results_subdir="containerized",  # JSON files in containerized/
+    )
     analyzer = BenchmarkAnalyzer(config)
 
     # Process sample results
@@ -60,6 +64,11 @@ def sample_dataset_example() -> BenchmarkAnalyzer:
             "benchmark_type": "latency",
             "memory_util": "0.8",
         },
+        results_subdir="containerized",  # JSON files in containerized/
+        logs_subdir="logs",  # Log files in logs/
+        monitoring_subdir="monitoring",  # Monitoring files in monitoring/
+        include_monitoring_data=True,
+        require_complete_monitoring=False,
     )
 
     analyzer = BenchmarkAnalyzer(config)

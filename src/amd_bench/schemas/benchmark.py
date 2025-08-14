@@ -60,6 +60,9 @@ class ExperimentConfig(BaseModel):
     memory_util: float = Field(
         ..., gt=0, le=1, description="GPU memory utilization fraction", examples=[0.8, 0.9, 0.95]
     )
+    tensor_parallel_size: int = Field(
+        default=1, gt=0, description="Number of GPUs used for tensor parallelism"
+    )
     timestamp: str = Field(..., description="Experiment timestamp")
 
     @field_validator("timestamp")
@@ -120,6 +123,9 @@ class ExperimentFiles(BaseModel):
 
     # Core benchmark result
     result_file: Path = Field(..., description="JSON benchmark results file")
+
+    # Master benchmark run log (contains all experiment configs)
+    benchmark_run_log: Optional[Path] = Field(None, description="Master benchmark run log file")
 
     # Optional monitoring files
     log_file: Optional[Path] = Field(None, description="Execution log file")

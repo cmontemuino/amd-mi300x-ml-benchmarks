@@ -3,7 +3,7 @@
 import json
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Set, cast
+from typing import Any, Dict, List, Literal, Optional, cast
 
 import pandas as pd
 
@@ -46,6 +46,10 @@ class BenchmarkAnalyzer:
         self._setup_output_directories()
         self._validate_and_log_structure()
 
+        # Cache for tensor parallel size (parsed once per benchmark run)
+        self._tensor_parallel_cache: Optional[int] = None
+        self._benchmark_run_log_path: Optional[Path] = None
+
         logger.info("Analyzer initialized with custom filename formats")
         logger.info(f"Loaded {len(self.filename_formats)} filename formats")
         logger.info(f"Input directory: {self.config.input_dir}")
@@ -53,6 +57,30 @@ class BenchmarkAnalyzer:
         logger.info(f"Logs directory: {self.logs_dir}")
         logger.info(f"Monitoring directory: {self.monitoring_dir}")
         logger.info(f"Output directory: {self.config.output_dir}")
+
+    def _get_tensor_parallel_size(self, benchmark_run_log: Optional[Path]) -> Optional[int]:
+        """Get tensor parallel size with caching optimization."""
+        # If  already parsed this log file, return cached value
+        if (
+            self._benchmark_run_log_path == benchmark_run_log
+            and self._tensor_parallel_cache is not None
+        ):
+            return self._tensor_parallel_cache
+
+        # Parse tensor parallel size from log (only once per benchmark run)
+        if benchmark_run_log and benchmark_run_log.exists():
+            tensor_parallel_size = self._extract_tensor_parallel_from_log(benchmark_run_log)
+
+            # Cache the result
+            self._tensor_parallel_cache = tensor_parallel_size
+            self._benchmark_run_log_path = benchmark_run_log
+
+            logger.info(
+                f"Cached tensor_parallel_size={tensor_parallel_size} from {benchmark_run_log.name}"
+            )
+            return tensor_parallel_size
+
+        return None
 
     def _get_results_directory(self) -> Path:
         """Get the directory containing JSON result files"""
@@ -116,10 +144,11 @@ class BenchmarkAnalyzer:
         structures and provides filtering options based on completeness requirements.
 
         The discovery process follows these steps:
-        1. Locate all JSON result files matching the configured pattern
-        2. For each result file, search for corresponding monitoring files
-        3. Build ExperimentFiles objects containing all related file paths
-        4. Apply filtering based on completeness requirements if specified
+        1. Try to discover the master benchmark log run
+        2. Locate all JSON result files matching the configured pattern
+        3. For each result file, search for corresponding monitoring files
+        4. Build ExperimentFiles objects containing all related file paths
+        5. Apply filtering based on completeness requirements if specified
 
         Returns:
             List[ExperimentFiles]: A list of ExperimentFiles objects, each containing:
@@ -151,13 +180,16 @@ class BenchmarkAnalyzer:
         """
         logger.info("Discovering experiment files...")
 
+        # First, find the master benchmark run log
+        benchmark_run_log = self._find_benchmark_run_log()
+
         # Get all JSON result files
         result_files = list(self.results_dir.glob(self.config.results_pattern))
         experiments = []
 
         for result_file in result_files:
             try:
-                experiment = self._build_experiment_files(result_file)
+                experiment = self._build_experiment_files(result_file, benchmark_run_log)
                 experiments.append(experiment)
 
                 # Log what we found for this experiment
@@ -178,7 +210,26 @@ class BenchmarkAnalyzer:
         logger.info(f"Discovered {len(experiments)} experiment file sets")
         return experiments
 
-    def _build_experiment_files(self, result_file: Path) -> ExperimentFiles:
+    def _find_benchmark_run_log(self) -> Optional[Path]:
+        """Find the master benchmark run log file."""
+        if not self.logs_dir or not self.logs_dir.exists():
+            return None
+
+        # Look for files matching pattern: benchmark_run_*.log
+        benchmark_logs = list(self.logs_dir.glob("benchmark_run_*.log"))
+
+        if benchmark_logs:
+            # If multiple logs exist, take the most recent one
+            latest_log = max(benchmark_logs, key=lambda x: x.stat().st_mtime)
+            logger.info(f"Found master benchmark log: {latest_log.name}")
+            return latest_log
+
+        logger.warning("No master benchmark run log found")
+        return None
+
+    def _build_experiment_files(
+        self, result_file: Path, benchmark_run_log: Optional[Path]
+    ) -> ExperimentFiles:
         """Build ExperimentFiles object by finding matching files."""
         # Extract the base pattern from the result filename
         base_name = result_file.stem  # Remove .json extension
@@ -212,6 +263,7 @@ class BenchmarkAnalyzer:
 
         return ExperimentFiles(
             result_file=result_file,
+            benchmark_run_log=benchmark_run_log,  # Shared across all experiments
             log_file=log_file,
             cpu_metrics_file=cpu_metrics_file,
             gpu_power_file=gpu_power_file,
@@ -562,6 +614,13 @@ class BenchmarkAnalyzer:
         thermal_analysis = []
         power_analysis = []
 
+        # Get tensor parallel size once for the entire benchmark run
+        benchmark_run_log = None
+        if self.experiment_files:
+            benchmark_run_log = self.experiment_files[0].benchmark_run_log
+
+        tensor_parallel_size = self._get_tensor_parallel_size(benchmark_run_log)
+
         for experiment in self.experiment_files:
             try:
                 monitoring_data = self.load_monitoring_data(experiment)
@@ -581,23 +640,93 @@ class BenchmarkAnalyzer:
                     # Enhanced power analysis
                     if "gpu_power" in monitoring_data:
                         power_data = self._analyze_power_efficiency(
-                            experiment, monitoring_data["gpu_power"]
+                            experiment=experiment,
+                            power_df=monitoring_data["gpu_power"],
+                            tensor_parallel_size=tensor_parallel_size,
                         )
                         power_analysis.append(power_data)
 
             except Exception as e:
                 logger.error(f"Error processing monitoring for {experiment.result_file.name}: {e}")
 
+        gpu_allocation_summary = self._analyze_gpu_device_allocation(power_analysis)
+
         # Export comprehensive monitoring analysis
         return self._export_monitoring_analysis(
-            monitoring_summaries, thermal_analysis, power_analysis
+            monitoring_summaries, thermal_analysis, power_analysis, gpu_allocation_summary
         )
+
+    @staticmethod
+    def _analyze_gpu_device_allocation(power_analysis: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Analyze GPU device allocation patterns across experiments."""
+        if not power_analysis:
+            return {}
+
+        # Get unique devices across all experiments
+        all_allocated_devices = []
+        device_usage_count: Dict[str, Any] = {}
+
+        for experiment_data in power_analysis:
+            if (
+                "allocated_gpu_devices" in experiment_data
+                and experiment_data["allocated_gpu_devices"]
+            ):
+                devices = experiment_data["allocated_gpu_devices"]
+                all_allocated_devices.extend(devices)
+
+                # Count usage per device
+                for device in devices:
+                    device_usage_count[device] = device_usage_count.get(device, 0) + 1
+
+        unique_devices = list(set(all_allocated_devices))
+
+        allocation_summary = {
+            "unique_allocated_devices": unique_devices,
+            "total_unique_devices": len(unique_devices),
+            "device_usage_frequency": device_usage_count,
+            "most_used_device": (
+                max(device_usage_count.items(), key=lambda x: x[1]) if device_usage_count else None
+            ),
+        }
+
+        logger.info(f"GPU allocation analysis: {allocation_summary}")
+        return allocation_summary
+
+    @staticmethod
+    def _extract_tensor_parallel_from_log(benchmark_run_log: Optional[Path]) -> Optional[int]:
+        """Extract tensor parallel size from master benchmark run log for specific experiment."""
+        if not benchmark_run_log or not benchmark_run_log.exists():
+            return None
+
+        try:
+            with open(benchmark_run_log, "r", encoding="utf-8") as f:
+                # Just find the first occurrence of "Tensor Parallel:"
+                # since it's consistent across all experiments
+                for line in f:
+                    if "Tensor Parallel:" in line:
+                        import re
+
+                        match = re.search(r"Tensor Parallel:\s*(\d+)", line)
+                        if match:
+                            tensor_parallel = int(match.group(1))
+                            logger.debug(
+                                f"Found tensor_parallel_size={tensor_parallel} (consistent across all experiments)"
+                            )
+                            return tensor_parallel
+
+            logger.warning("No 'Tensor Parallel:' line found in benchmark log")
+            return None
+
+        except Exception as e:
+            logger.warning(f"Failed to parse tensor parallel size from {benchmark_run_log}: {e}")
+            return None
 
     def _export_monitoring_analysis(
         self,
         monitoring_summaries: List[Dict[str, Any]],
         thermal_analysis: List[Dict[str, Any]],
         power_analysis: List[Dict[str, Any]],
+        gpu_allocation_summary: Dict[str, Any],
     ) -> Dict[str, pd.DataFrame]:
         """Export comprehensive monitoring analysis to files."""
 
@@ -623,10 +752,21 @@ class BenchmarkAnalyzer:
             power_df.to_csv(power_file, index=False)
             logger.info(f"Power analysis exported to {power_file}")
 
+        # Export GPU allocation summary
+        if gpu_allocation_summary:
+            allocation_file = self.config.output_dir / "tables" / "gpu_allocation_summary.csv"
+            # Convert summary to DataFrame for consistent export
+            allocation_df = pd.DataFrame([gpu_allocation_summary])
+            allocation_df.to_csv(allocation_file, index=False)
+            logger.info(f"GPU allocation summary exported to {allocation_file}")
+
         return {
             "monitoring_summary": monitoring_df,  # Aggregated monitoring metrics
             "thermal_analysis": thermal_df,  # Temperature analysis data
             "power_analysis": power_df,  # Power consumption analysis
+            "gpu_allocation_summary": (
+                pd.DataFrame([gpu_allocation_summary]) if gpu_allocation_summary else pd.DataFrame()
+            ),
         }
 
     @staticmethod
@@ -647,7 +787,9 @@ class BenchmarkAnalyzer:
 
     @staticmethod
     def _analyze_power_efficiency(
-        experiment: ExperimentFiles, power_df: pd.DataFrame, active_gpus: Optional[Set[str]] = None
+        experiment: ExperimentFiles,
+        power_df: pd.DataFrame,
+        tensor_parallel_size: Optional[int] = None,
     ) -> Dict[str, Any]:
         """Analyze power consumption efficiency."""
         total_power_series = power_df.groupby("timestamp")["power_watts"].sum()
@@ -662,24 +804,47 @@ class BenchmarkAnalyzer:
             ),  # Per GPU average
             "power_stability": total_power_series.std(),
             "num_gpus_monitored": num_gpus_monitored,
+            "tensor_parallel_size": tensor_parallel_size or 1,  # Store for reference
         }
 
-        # If we know which GPUs were active, calculate active-only metrics
-        if active_gpus:
-            active_power_series = (
-                power_df[power_df["device"].isin(active_gpus)]
-                .groupby("timestamp")["power_watts"]
-                .sum()
+        # If we know tensor parallel size, calculate allocated GPU metrics
+        if tensor_parallel_size and tensor_parallel_size > 0:
+            # Approach: Identify most active GPUs based on power consumption
+            gpu_avg_power = (
+                power_df.groupby("device")["power_watts"].mean().sort_values(ascending=False)
             )
-            results.update(
-                {
-                    "avg_active_power": active_power_series.mean(),
-                    "power_efficiency_active": (
-                        active_power_series.mean() / len(active_gpus) if active_gpus else 0.0
-                    ),
-                    "num_active_gpus": len(active_gpus),
-                }
-            )
+
+            if len(gpu_avg_power) >= tensor_parallel_size:
+                # Take the top N GPUs by power consumption (most likely the allocated ones)
+                allocated_gpus = gpu_avg_power.head(tensor_parallel_size)
+                allocated_devices = allocated_gpus.index.tolist()
+
+                # Calculate power metrics for allocated GPUs only
+                allocated_power_df = power_df[power_df["device"].isin(allocated_devices)]
+                allocated_power_series = allocated_power_df.groupby("timestamp")[
+                    "power_watts"
+                ].sum()
+
+                results.update(
+                    {
+                        "avg_allocated_power": allocated_power_series.mean(),
+                        "power_efficiency_allocated": allocated_power_series.mean()
+                        / tensor_parallel_size,
+                        "num_active_gpus": tensor_parallel_size,
+                        "allocated_gpu_devices": allocated_devices,
+                    }
+                )
+            else:
+                # Fallback: use all available GPUs
+                results.update(
+                    {
+                        "avg_allocated_power": total_power_series.mean(),
+                        "power_efficiency_allocated": total_power_series.mean()
+                        / len(gpu_avg_power),
+                        "num_active_gpus": len(gpu_avg_power),
+                        "allocated_gpu_devices": gpu_avg_power.index.tolist(),
+                    }
+                )
 
         return results
 

@@ -45,7 +45,7 @@ def load_analysis_config_from_yaml(config_path: Union[Path, str]) -> AnalysisCon
         if "logs_subdir" in yaml_data:
             yaml_data["logs_subdir"] = str(yaml_data["logs_subdir"])
         if "monitoring_subdir" in yaml_data:
-            yaml_data["monitoring_subdir"] = str(yaml_data["logs_subdir"])
+            yaml_data["monitoring_subdir"] = str(yaml_data["monitoring_subdir"])
 
         return AnalysisConfig(**yaml_data)
 

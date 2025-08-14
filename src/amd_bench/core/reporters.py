@@ -291,8 +291,9 @@ class ReportGenerator:
 
                             try:
                                 devices = ast.literal_eval(devices)
-                            except Exception:
-                                devices = [devices]  # Fallback to single device
+                            except (ValueError, SyntaxError):
+                                logger.warning(f"Could not parse allocated_gpu_devices string, skipping: {devices}")
+                                devices = []
                         all_allocated_devices.extend(devices)
 
                 unique_devices = list(set(all_allocated_devices))

@@ -1,5 +1,6 @@
 """Report generation for benchmark analysis results."""
 
+import ast
 import json
 from collections import Counter
 from datetime import datetime
@@ -288,8 +289,6 @@ class ReportGenerator:
                         devices = experiment_data["allocated_gpu_devices"]
                         if isinstance(devices, str):
                             # Parse string representation if needed
-                            import ast
-
                             try:
                                 devices = ast.literal_eval(devices)
                             except (ValueError, SyntaxError):

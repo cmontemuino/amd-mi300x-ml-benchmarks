@@ -1,6 +1,8 @@
 """Report generation for benchmark analysis results."""
 
+import ast
 import json
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO
@@ -277,16 +279,51 @@ class ReportGenerator:
             file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_all:.1f}W\n")
             file.write(f"- **Power Stability**: {power_stability:.2f}W variation\n\n")
 
-            # Include efficiency insights for active GPUs, if available
-            file.write("### Power Consumption Analysis - Active GPUs Only\n\n")
-            if "avg_active_power" in power_analysis:
-                num_active_gpus = int(power_analysis["num_active_gpus"].max())
-                avg_active_power = power_analysis["avg_active_power"].mean()
-                avg_efficiency_active = power_analysis["power_efficiency_active"].mean()
+            # Add GPU allocation insights
+            if "allocated_gpu_devices" in power_analysis.columns:
+                # Extract unique devices across all experiments
+                all_allocated_devices = []
+                for experiment_data in power_analysis.to_dict("records"):
+                    if experiment_data.get("allocated_gpu_devices"):
+                        # Handle the case where allocated_gpu_devices might be a string representation of a list
+                        devices = experiment_data["allocated_gpu_devices"]
+                        if isinstance(devices, str):
+                            # Parse string representation if needed
+                            try:
+                                devices = ast.literal_eval(devices)
+                            except (ValueError, SyntaxError):
+                                logger.warning(
+                                    f"Could not parse allocated_gpu_devices string, skipping: {devices}"
+                                )
+                                devices = []
+                        all_allocated_devices.extend(devices)
+
+                unique_devices = list(set(all_allocated_devices))
+
+                file.write("### GPU Device Allocation\n\n")
+                num_active_gpus = len(unique_devices)
+                file.write(f"- **Total Unique GPU Devices Used**: {num_active_gpus}\n")
+                avg_allocated_power = power_analysis["avg_allocated_power"].mean()
+                power_efficiency_allocated = power_analysis["power_efficiency_allocated"].mean()
                 file.write(
-                    f"- **Average Total Power Consumption**: {avg_active_power:.1f}W across **active** {num_active_gpus}x MI300X GPUs\n"
+                    f"- **Average Total Power Consumption**: {avg_allocated_power:.1f}W across **active** {num_active_gpus}x MI300X GPUs\n"
                 )
-                file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_active:.1f}W\n")
+                file.write(f"- **Per-GPU Efficiency (avg)**: {power_efficiency_allocated:.1f}W\n")
+
+                file.write(f"- **Device IDs**: {', '.join(sorted(unique_devices))}\n")
+
+                # Calculate device usage frequency
+                device_usage = Counter(all_allocated_devices)
+                most_used = device_usage.most_common(1)[0] if device_usage else None
+
+                if most_used:
+                    file.write(
+                        f"- **Most Frequently Used Device**: {most_used[0]} ({most_used[1]} experiments)\n"
+                    )
+
+                file.write(
+                    f"- **Total Device Allocations**: {len(all_allocated_devices)} across all experiments\n\n"
+                )
 
         # Thermal analysis
         if not thermal_analysis.empty:

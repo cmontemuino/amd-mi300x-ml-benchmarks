@@ -470,7 +470,9 @@ class BenchmarkAnalyzer:
             if self.config.generate_plots:
                 plot_generator = BenchmarkVisualizer(
                     self.results,
-                    config=AnalysisConfig(input_dir=Path("."), output_dir=Path("plots")),
+                    config=AnalysisConfig(
+                        input_dir=self.config.input_dir, output_dir=Path("plots")
+                    ),
                 )
                 standard_plots = plot_generator.create_all_plots(self.config.output_dir / "plots")
 
@@ -655,7 +657,9 @@ class BenchmarkAnalyzer:
             "experiment": experiment.result_file.name,
             "avg_total_power": total_power_series.mean(),
             "max_total_power": total_power_series.max(),
-            "power_efficiency": total_power_series.mean() / num_gpus_monitored if num_gpus_monitored > 0 else 0.0,  # Per GPU average
+            "power_efficiency": (
+                total_power_series.mean() / num_gpus_monitored if num_gpus_monitored > 0 else 0.0
+            ),  # Per GPU average
             "power_stability": total_power_series.std(),
             "num_gpus_monitored": num_gpus_monitored,
         }

@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class BenchmarkMetrics(BaseModel):
@@ -245,31 +245,24 @@ class AnalysisConfig(BaseModel):
 
         return v
 
-    @field_validator("input_dir")
-    @classmethod
-    def validate_input_dir(cls, v: Path) -> Path:
-        """Validate input directory structure."""
-        resolved = v.resolve()
+    @model_validator(mode="after")
+    def validate_directory_structure(self) -> "AnalysisConfig":
+        """Validate directory structure using configuration parameters."""
+        resolved = self.input_dir.resolve()
 
-        if not resolved.exists():
-            raise ValueError(f"Input directory does not exist: {resolved}")
+        results_dir = resolved / self.results_subdir
 
-        if not resolved.is_dir():
-            raise ValueError(f"Input path is not a directory: {resolved}")
+        if not results_dir.exists():
+            raise ValueError(
+                f"Results subdirectory '{self.results_subdir}' not found in {resolved}"
+            )
 
-        # Check for JSON files directly in input directory OR in containerized subdirectory
-        # Check for any JSON files in the structure
-        json_files = []
+        # Check for files using the configured pattern
+        result_files = list(results_dir.glob(self.results_pattern))
+        if not result_files:
+            raise ValueError(f"No files matching '{self.results_pattern}' found in {results_dir}")
 
-        # Check direct path
-        json_files.extend(list(resolved.glob("*.json")))
-
-        # Check containerized subdirectory
-        containerized_dir = resolved / "containerized"
-        if containerized_dir.exists():
-            json_files.extend(list(containerized_dir.glob("*.json")))
-
-        return resolved
+        return self
 
     @field_validator("output_dir")
     @classmethod

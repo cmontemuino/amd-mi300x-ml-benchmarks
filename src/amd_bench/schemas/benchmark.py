@@ -250,6 +250,11 @@ class AnalysisConfig(BaseModel):
         """Validate directory structure using configuration parameters."""
         resolved = self.input_dir.resolve()
 
+        if not resolved.exists():
+            raise ValueError(f"Input directory does not exist: {resolved}")
+        if not resolved.is_dir():
+            raise ValueError(f"Input path is not a directory: {resolved}")
+
         results_dir = resolved / self.results_subdir
 
         if not results_dir.exists():

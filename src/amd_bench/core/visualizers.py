@@ -695,7 +695,7 @@ class BenchmarkVisualizer:
 
             # Power stability vs efficiency
             ax2.scatter(
-                power_analysis["power_stability"], power_analysis["power_efficiency"], alpha=0.7
+                power_analysis["power_stability"], power_analysis["power_efficiency_all"], alpha=0.7
             )
             ax2.set_xlabel("Power Stability (W std dev)")
             ax2.set_ylabel("Per-GPU Power Efficiency (W)")

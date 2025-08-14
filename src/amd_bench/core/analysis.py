@@ -482,7 +482,9 @@ class BenchmarkAnalyzer:
 
             # Generate reports
             report_generator = ReportGenerator(self.config, self.results, stats_analyzer)
-            report_generator.create_reports(self.config.output_dir / "reports")
+            report_generator.create_reports(
+                self.config.output_dir / "reports", monitoring_dataframes
+            )
 
             logger.info("Benchmark analysis completed successfully")
             logger.info(f"Results available in: {self.config.output_dir}")
@@ -559,7 +561,6 @@ class BenchmarkAnalyzer:
         monitoring_summaries = []
         thermal_analysis = []
         power_analysis = []
-        monitoring_data = {}
 
         for experiment in self.experiment_files:
             try:
@@ -588,38 +589,45 @@ class BenchmarkAnalyzer:
                 logger.error(f"Error processing monitoring for {experiment.result_file.name}: {e}")
 
         # Export comprehensive monitoring analysis
-        self._export_monitoring_analysis(monitoring_summaries, thermal_analysis, power_analysis)
-
-        return monitoring_data
+        return self._export_monitoring_analysis(
+            monitoring_summaries, thermal_analysis, power_analysis
+        )
 
     def _export_monitoring_analysis(
         self,
         monitoring_summaries: List[Dict[str, Any]],
         thermal_analysis: List[Dict[str, Any]],
         power_analysis: List[Dict[str, Any]],
-    ) -> None:
+    ) -> Dict[str, pd.DataFrame]:
         """Export comprehensive monitoring analysis to files."""
+
+        monitoring_df = pd.DataFrame(monitoring_summaries)
+        thermal_df = pd.DataFrame(thermal_analysis)
+        power_df = pd.DataFrame(power_analysis)
 
         # Export general monitoring summaries
         if monitoring_summaries:
-            monitoring_df = pd.DataFrame(monitoring_summaries)
             monitoring_file = self.config.output_dir / "tables" / "monitoring_summary.csv"
             monitoring_df.to_csv(monitoring_file, index=False)
             logger.info(f"Monitoring summary exported to {monitoring_file}")
 
         # Export thermal analysis
         if thermal_analysis:
-            thermal_df = pd.DataFrame(thermal_analysis)
             thermal_file = self.config.output_dir / "tables" / "thermal_analysis.csv"
             thermal_df.to_csv(thermal_file, index=False)
             logger.info(f"Thermal analysis exported to {thermal_file}")
 
         # Export power analysis
         if power_analysis:
-            power_df = pd.DataFrame(power_analysis)
             power_file = self.config.output_dir / "tables" / "power_analysis.csv"
             power_df.to_csv(power_file, index=False)
             logger.info(f"Power analysis exported to {power_file}")
+
+        return {
+            "monitoring_summary": monitoring_df,  # Aggregated monitoring metrics
+            "thermal_analysis": thermal_df,  # Temperature analysis data
+            "power_analysis": power_df,  # Power consumption analysis
+        }
 
     @staticmethod
     def _analyze_thermal_performance(

@@ -67,7 +67,9 @@ class ReportGenerator:
         self.results = results
         self.stats_analyzer = stats_analyzer
 
-    def create_reports(self, output_dir: Path) -> Dict[str, Path]:
+    def create_reports(
+        self, output_dir: Path, monitoring_dataframes: Dict[str, pd.DataFrame]
+    ) -> Dict[str, Path]:
         """Create all report formats."""
         output_dir = ensure_directory(output_dir)
 
@@ -75,7 +77,7 @@ class ReportGenerator:
 
         # Markdown report
         markdown_path = output_dir / "benchmark_analysis_report.md"
-        self._create_markdown_report(markdown_path)
+        self._create_markdown_report(markdown_path, monitoring_dataframes)
         generated_reports["markdown"] = markdown_path
 
         # JSON summary
@@ -86,7 +88,9 @@ class ReportGenerator:
         logger.info(f"Generated {len(generated_reports)} reports in {output_dir}")
         return generated_reports
 
-    def _create_markdown_report(self, path: Path) -> None:
+    def _create_markdown_report(
+        self, path: Path, monitoring_dataframes: Dict[str, pd.DataFrame]
+    ) -> None:
         """Create comprehensive markdown analysis report."""
         with open(path, "w", encoding="utf-8") as f:
             # Header
@@ -116,46 +120,16 @@ class ReportGenerator:
             self._write_key_findings(f)
 
             # System Monitoring Analysis
-            if self.config.include_monitoring_data:
-                monitoring_data = self._load_monitoring_data()
-                if monitoring_data:
-                    f.write("## System Monitoring Analysis\n\n")
-                    self._write_monitoring_analysis_section(
-                        f,
-                        monitoring_data["monitoring_summaries"],
-                        monitoring_data["thermal_analysis"],
-                        monitoring_data["power_analysis"],
-                    )
+            if monitoring_dataframes:
+                f.write("## System Monitoring Analysis\n\n")
+                self._write_monitoring_analysis_section(
+                    f,
+                    monitoring_dataframes["monitoring_summary"],
+                    monitoring_dataframes["thermal_analysis"],
+                    monitoring_dataframes["power_analysis"],
+                )
 
         logger.info(f"Markdown report created: {path}")
-
-    def _load_monitoring_data(self) -> Dict[str, pd.DataFrame]:
-        """Load monitoring data from existing CSV files."""
-        monitoring_data = {}
-        tables_dir = self.config.output_dir / "tables"
-
-        try:
-            # Load monitoring summaries
-            monitoring_file = tables_dir / "monitoring_summary.csv"
-            if monitoring_file.exists():
-                monitoring_data["monitoring_summaries"] = pd.read_csv(monitoring_file)
-
-            # Load thermal analysis
-            thermal_file = tables_dir / "thermal_analysis.csv"
-            if thermal_file.exists():
-                monitoring_data["thermal_analysis"] = pd.read_csv(thermal_file)
-
-            # Load power analysis
-            power_file = tables_dir / "power_analysis.csv"
-            if power_file.exists():
-                monitoring_data["power_analysis"] = pd.read_csv(power_file)
-
-            logger.info(f"Loaded {len(monitoring_data)} monitoring datasets")
-
-        except Exception as e:
-            logger.error(f"Error loading monitoring data: {e}")
-
-        return monitoring_data
 
     def _write_executive_summary(self, file: TextIO) -> None:
         """Write executive summary section."""

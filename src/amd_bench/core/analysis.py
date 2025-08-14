@@ -664,7 +664,7 @@ class BenchmarkAnalyzer:
 
         # Get unique devices across all experiments
         all_allocated_devices = []
-        device_usage_count: Dict[str, Any] = {}
+        device_usage_count: Dict[str, int] = {}
 
         for experiment_data in power_analysis:
             if (

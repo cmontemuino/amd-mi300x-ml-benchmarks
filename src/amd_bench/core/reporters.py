@@ -1,6 +1,7 @@
 """Report generation for benchmark analysis results."""
 
 import json
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO
@@ -292,7 +293,9 @@ class ReportGenerator:
                             try:
                                 devices = ast.literal_eval(devices)
                             except (ValueError, SyntaxError):
-                                logger.warning(f"Could not parse allocated_gpu_devices string, skipping: {devices}")
+                                logger.warning(
+                                    f"Could not parse allocated_gpu_devices string, skipping: {devices}"
+                                )
                                 devices = []
                         all_allocated_devices.extend(devices)
 
@@ -311,8 +314,6 @@ class ReportGenerator:
                 file.write(f"- **Device IDs**: {', '.join(sorted(unique_devices))}\n")
 
                 # Calculate device usage frequency
-                from collections import Counter
-
                 device_usage = Counter(all_allocated_devices)
                 most_used = device_usage.most_common(1)[0] if device_usage else None
 

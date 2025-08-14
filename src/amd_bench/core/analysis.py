@@ -704,8 +704,6 @@ class BenchmarkAnalyzer:
                 # since it's consistent across all experiments
                 for line in f:
                     if "Tensor Parallel:" in line:
-                        import re
-
                         match = re.search(r"Tensor Parallel:\s*(\d+)", line)
                         if match:
                             tensor_parallel = int(match.group(1))

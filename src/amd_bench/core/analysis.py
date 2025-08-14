@@ -3,7 +3,7 @@
 import json
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, cast
+from typing import Any, Dict, List, Literal, Optional, Set, cast
 
 import pandas as pd
 
@@ -647,22 +647,41 @@ class BenchmarkAnalyzer:
 
     @staticmethod
     def _analyze_power_efficiency(
-        experiment: ExperimentFiles, power_df: pd.DataFrame
+        experiment: ExperimentFiles, power_df: pd.DataFrame, active_gpus: Optional[Set[str]] = None
     ) -> Dict[str, Any]:
         """Analyze power consumption efficiency."""
         total_power_series = power_df.groupby("timestamp")["power_watts"].sum()
         num_gpus_monitored = power_df["device"].nunique()
 
-        return {
+        results = {
             "experiment": experiment.result_file.name,
             "avg_total_power": total_power_series.mean(),
             "max_total_power": total_power_series.max(),
-            "power_efficiency": (
+            "power_efficiency_all": (
                 total_power_series.mean() / num_gpus_monitored if num_gpus_monitored > 0 else 0.0
             ),  # Per GPU average
             "power_stability": total_power_series.std(),
             "num_gpus_monitored": num_gpus_monitored,
         }
+
+        # If we know which GPUs were active, calculate active-only metrics
+        if active_gpus:
+            active_power_series = (
+                power_df[power_df["device"].isin(active_gpus)]
+                .groupby("timestamp")["power_watts"]
+                .sum()
+            )
+            results.update(
+                {
+                    "avg_active_power": active_power_series.mean(),
+                    "power_efficiency_active": (
+                        active_power_series.mean() / len(active_gpus) if active_gpus else 0.0
+                    ),
+                    "num_active_gpus": len(active_gpus),
+                }
+            )
+
+        return results
 
     @staticmethod
     def load_monitoring_data(experiment: ExperimentFiles) -> Dict[str, pd.DataFrame]:

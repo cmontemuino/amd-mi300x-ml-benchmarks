@@ -291,17 +291,28 @@ class ReportGenerator:
         if not power_analysis.empty:
             avg_power = power_analysis["avg_total_power"].mean()
             max_power = power_analysis["max_total_power"].max()
-            avg_efficiency = power_analysis["power_efficiency"].mean()
+            avg_efficiency_all = power_analysis["power_efficiency_all"].mean()
             power_stability = power_analysis["power_stability"].std()
 
-            file.write("### Power Consumption Analysis\n\n")
-            num_gpus = int(power_analysis["num_gpus_monitored"].max())
+            file.write("### Power Consumption Analysis - All Available GPUs\n\n")
+            num_all_gpus = int(power_analysis["num_gpus_monitored"].max())
             file.write(
-                f"- **Average Total Power Consumption**: {avg_power:.1f}W across {num_gpus}x MI300X GPUs\n"
+                f"- **Average Total Power Consumption**: {avg_power:.1f}W across **total** {num_all_gpus}x MI300X GPUs\n"
             )
             file.write(f"  - **Peak Power Draw**: {max_power:.1f}W\n")
-            file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency:.1f}W\n")
+            file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_all:.1f}W\n")
             file.write(f"- **Power Stability**: {power_stability:.2f}W variation\n\n")
+
+            # Include efficiency insights for active GPUs, if available
+            file.write("### Power Consumption Analysis - Active GPUs Only\n\n")
+            if "avg_active_power" in power_analysis:
+                num_active_gpus = int(power_analysis["num_active_gpus"].max())
+                avg_active_power = power_analysis["avg_active_power"].mean()
+                avg_efficiency_active = power_analysis["power_efficiency_active"].mean()
+                file.write(
+                    f"- **Average Total Power Consumption**: {avg_active_power:.1f}W across **active** {num_active_gpus}x MI300X GPUs\n"
+                )
+                file.write(f"- **Per-GPU Efficiency (avg)**: {avg_efficiency_active:.1f}W\n")
 
         # Thermal analysis
         if not thermal_analysis.empty:

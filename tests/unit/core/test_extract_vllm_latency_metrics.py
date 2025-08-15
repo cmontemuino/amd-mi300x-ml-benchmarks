@@ -139,19 +139,22 @@ class TestExtractVllmLatencyMetrics:
 
         assert result.latency_std == pytest.approx(expected_std, abs=0.001)
 
-    def test_extract_throughput_calculation(self) -> None:
-        """Test that throughput is correctly calculated as per-request completion rate."""
-        test_cases = [
+    @pytest.mark.parametrize(
+        "avg_latency, expected_throughput",
+        [
             (1.0, 1.0),  # 1 second -> 1 req/s
             (2.0, 0.5),  # 2 seconds -> 0.5 req/s
             (0.5, 2.0),  # 0.5 seconds -> 2 req/s
             (0.25, 4.0),  # 0.25 seconds -> 4 req/s
-        ]
-
-        for avg_latency, expected_throughput in test_cases:
-            data = {"avg_latency": avg_latency}
-            result = BenchmarkAnalyzer._extract_vllm_latency_metrics(data)
-            assert result.throughput == pytest.approx(expected_throughput, abs=0.001)
+        ],
+    )
+    def test_extract_throughput_calculation(
+        self, avg_latency: float, expected_throughput: float
+    ) -> None:
+        """Test that throughput is correctly calculated as per-request completion rate."""
+        data = {"avg_latency": avg_latency}
+        result = BenchmarkAnalyzer._extract_vllm_latency_metrics(data)
+        assert result.throughput == pytest.approx(expected_throughput, abs=0.001)
 
     @patch("statistics.stdev")
     @patch("amd_bench.core.analysis.logger")

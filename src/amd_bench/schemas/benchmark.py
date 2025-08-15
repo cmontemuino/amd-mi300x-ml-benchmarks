@@ -138,7 +138,13 @@ class BenchmarkResult(BaseModel):
     def batch_efficiency_ratio(self) -> float:
         """Calculate batch processing efficiency compared to single requests.
 
-        This ratio indicates how efficiently the system handles batch processing
+        This ratio considers multiple factors:
+        - Throughput scaling efficiency
+        - Latency penalty factor
+        - Memory utilization impact
+        - System resource efficiency
+
+        The ratio indicates how efficiently the system handles batch processing
         compared to processing requests individually.
 
         Returns:
@@ -147,13 +153,81 @@ class BenchmarkResult(BaseModel):
         if self.config.batch_size <= 1:
             return 1.0
 
-        # Theoretical throughput if batch_size requests were processed in parallel
-        theoretical_throughput = self.config.batch_size * (1.0 / self.metrics.avg_latency)
+        # Base throughput efficiency
+        theoretical_max_throughput = self.config.batch_size * (1.0 / self.metrics.avg_latency)
+        throughput_efficiency = self.metrics.throughput / theoretical_max_throughput
 
-        # Actual per-request completion rate
-        actual_completion_rate = self.metrics.throughput
+        # Latency scaling penalty
+        # Ideal latency scaling should be minimal with batch size
+        base_latency_estimate = self.metrics.avg_latency / self.config.batch_size
+        latency_penalty = 1.0 - min(
+            (self.metrics.avg_latency - base_latency_estimate) / self.metrics.avg_latency, 0.5
+        )
 
-        return actual_completion_rate / theoretical_throughput
+        # Memory efficiency factor
+        memory_efficiency = min(
+            self.config.memory_util * 1.2, 1.0
+        )  # Reward higher memory utilization
+
+        # Variance penalty - lower variance is better
+        variance_penalty = 1.0 - min(self.metrics.latency_std / self.metrics.avg_latency, 0.3)
+
+        # Combined efficiency score
+        combined_efficiency = (
+            throughput_efficiency * 0.4
+            + latency_penalty * 0.3
+            + memory_efficiency * 0.2
+            + variance_penalty * 0.1
+        )
+
+        return max(min(combined_efficiency, 1.0), 0.0)  # Clamp between 0 and 1
+
+    @property
+    def batch_scaling_grade(self) -> str:
+        """Human-readable grade for batch efficiency"""
+        ratio = self.batch_efficiency_ratio
+        if ratio >= 0.9:
+            return "A+ (Excellent)"
+        elif ratio >= 0.8:
+            return "A (Very Good)"
+        elif ratio >= 0.7:
+            return "B (Good)"
+        elif ratio >= 0.6:
+            return "C (Fair)"
+        elif ratio >= 0.5:
+            return "D (Poor)"
+        else:
+            return "F (Very Poor)"
+
+    @property
+    def throughput_scaling_efficiency(self) -> float:
+        """Pure throughput scaling efficiency"""
+        if self.config.batch_size <= 1:
+            return 1.0
+        theoretical_max = self.config.batch_size * (1.0 / self.metrics.avg_latency)
+        return self.metrics.throughput / theoretical_max
+
+    @property
+    def latency_scaling_efficiency(self) -> float:
+        """How well latency scales with batch size"""
+        if self.config.batch_size <= 1:
+            return 1.0
+        # Ideal: latency should increase minimally with batch size
+        ideal_latency_increase = (
+            1.0 + (self.config.batch_size - 1) * 0.1
+        )  # 10% per additional batch item
+        actual_latency_ratio = self.metrics.avg_latency / (
+            self.metrics.avg_latency / ideal_latency_increase
+        )
+        return min(1.0 / actual_latency_ratio, 1.0)
+
+    @property
+    def resource_utilization_score(self) -> float:
+        """Overall resource utilization effectiveness"""
+        # Combines memory utilization and system throughput
+        memory_score = self.config.memory_util
+        throughput_score = min(self.system_throughput / (self.config.batch_size * 2.0), 1.0)
+        return (memory_score + throughput_score) / 2.0
 
 
 class ExperimentFiles(BaseModel):

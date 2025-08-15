@@ -155,8 +155,6 @@ class ReportGenerator:
         **how frequently a single request completes**.\n"""
         )
 
-        # average latency into a rate representing how frequently a single request completes
-
     def _write_model_performance_section(self, file: TextIO) -> None:
         """Write model performance section to markdown report."""
         if not self.results:
@@ -209,8 +207,7 @@ class ReportGenerator:
 
         # Sort by batch_size first, then by latency within each batch size
         sorted_results = sorted(
-            self.results,
-            key=lambda r: (r.config.batch_size, r.metrics.avg_latency)
+            self.results, key=lambda r: (r.config.batch_size, r.metrics.avg_latency)
         )
 
         for result in sorted_results:

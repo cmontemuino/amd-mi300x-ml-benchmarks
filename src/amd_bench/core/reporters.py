@@ -113,6 +113,10 @@ class ReportGenerator:
             f.write("\n## Model Performance Overview\n\n")
             self._write_model_performance_section(f)
 
+            # Throughput Analysis
+            f.write("\n## Throughput Analysis\n\n")
+            self._write_throughput_analysis_section(f)
+
             # Configuration Analysis
             f.write("\n## Configuration Analysis\n\n")
             self._write_configuration_analysis(f)
@@ -143,8 +147,13 @@ class ReportGenerator:
             f"This analysis covers **{len(models)} models** across **{len(self.results)} experiments**.\n\n"
         )
         file.write(f"- **Average Latency**: {avg_latency:.4f} seconds\n")
-        file.write(f"- **Average Throughput**: {avg_throughput:.2f} requests/second\n")
+        file.write(f"- **Throughput**: {avg_throughput:.2f} requests/second\n")
         file.write(f"- **Models Tested**: {', '.join(sorted(models))}\n")
+
+        file.write(
+            """> ℹ️ **Note**: **Throughput** is defined as the **average latency** as a rate, representing
+        **how frequently a single request completes**.\n"""
+        )
 
     def _write_model_performance_section(self, file: TextIO) -> None:
         """Write model performance section to markdown report."""
@@ -177,6 +186,46 @@ class ReportGenerator:
             )
 
         file.write("\n")
+
+    def _write_throughput_analysis_section(self, file: TextIO) -> None:
+        """Write enhanced throughput analysis with proper metric distinctions."""
+
+        file.write("**Important**: This analysis reports two different throughput metrics:\n\n")
+        file.write(
+            "- **Per-Request Completion Rate**: How frequently individual requests complete\n"
+        )
+        file.write(
+            "- **System Throughput**: Total system processing capacity (batch_size × completion_rate)\n\n"
+        )
+
+        file.write(
+            "| Batch Size | Avg Latency (s) | Completion Rate (req/s) | System Throughput (req/s) | Input Length | Output Length | Mem Util (%) |\n"
+        )
+        file.write(
+            "|------------|-----------------|-------------------------|---------------------------|--------------|---------------|--------------|\n"
+        )
+
+        # Sort by batch_size first, then by latency within each batch size
+        sorted_results = sorted(
+            self.results, key=lambda r: (r.config.batch_size, r.metrics.avg_latency)
+        )
+
+        for result in sorted_results:
+            system_throughput = result.config.batch_size * result.metrics.throughput
+            file.write(
+                f"| {result.config.batch_size} | "
+                f"{result.metrics.avg_latency:.3f} | {result.metrics.throughput:.3f} | "
+                f"{system_throughput:.3f} | {result.config.input_length} | {result.config.output_length} | {result.config.memory_util * 100:.1f} |\n"
+            )
+
+        file.write("\n**Key Insights:**\n")
+        file.write("- Larger batch sizes reduce per-request completion rates due to queueing\n")
+        file.write(
+            "- System throughput may still increase with batch size despite higher latency\n"
+        )
+        file.write(
+            "- Choose batch size based on your use case: latency-sensitive vs. throughput-optimized\n\n"
+        )
 
     def _write_configuration_analysis(self, file: TextIO) -> None:
         """Write configuration analysis section."""

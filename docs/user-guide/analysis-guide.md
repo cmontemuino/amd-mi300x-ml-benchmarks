@@ -26,18 +26,23 @@ After running the analysis pipeline, you'll get comprehensive performance insigh
 analysis/sample-output/
 ├── plots/ # Visual performance analysis
 │ ├── batch_size_scaling.png # Batch size vs performance
-│ ├── batch_size_scaling_by_memory.png
-│ ├── memory_efficiency.png # Memory utilization effects
+│ ├── batch_size_scaling_by_memory.png # Same as batch_size_scaling.png but with a split per memory utilization
 │ ├── latency_analysis.png # Latency distribution analysis
+│ ├── memory_efficiency.png # Memory utilization effects
+│ ├── monitoring_dashboard.png # Dashboard with power consumption + GPU temp distribution + CPU-GPU power relationship
+│ ├── power_efficiency_analysis.png # Power consumption analysis + Power stability vs. efficiency
 │ └── throughput_comparison.png # Throughput comparisons
 ├── reports/ # Comprehensive analysis reports
 │ ├── analysis_summary.json # Machine-readable summary
 │ └── benchmark_analysis_report.md # Human-readable report
 └── tables/ # Statistical summaries (CSV)
   ├── batch_size_analysis.csv
+  ├── gpu_allocation_summary.csv
   ├── memory_utilization_analysis.csv
   ├── model_performance_summary.csv
-  └── raw_results.csv
+  ├── monitoring_summary.csv
+  ├── raw_results.csv
+  └── thermal_analysis.csv
 ```
 
 ### Visual Analysis Guide
@@ -180,9 +185,12 @@ analysis/sample-output/
 
 #### 5. Throughput Analysis
 
-![Througput Analysis](../assets/img/sample-analysis/throughput_comparison.png)
+![Throughput Analysis](../assets/img/sample-analysis/throughput_comparison.png)
 
 **What it shows**: Throughput performance across different configuration parameters, helping identify optimal settings for maximum system utilization
+
+> ℹ️ **Note**: **Throughput** is defined as the **average latency** as a rate, representing
+**how frequently a single request completes**.
 
 **How to interpret**:
 

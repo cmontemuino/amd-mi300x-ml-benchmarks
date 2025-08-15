@@ -1115,7 +1115,6 @@ class BenchmarkAnalyzer:
 
         - **Per-Request Completion Rate**: 1 / avg_latency (requests/second/experiment)
           - Measures how frequently individual requests complete
-          - Industry standard for latency benchmarks
           - Lower values for larger batch sizes due to queueing delays
 
         - **Batch-Level Throughput**: batch_size / avg_latency (theoretical max)
@@ -1203,8 +1202,9 @@ class BenchmarkAnalyzer:
             """Extract percentile with flexible key handling."""
             return float(percentiles.get(str(p), percentiles.get(p, 0.0)))
 
-        # Calculate per-request completion rate (industry standard for latency benchmarks)
-        per_request_completion_rate = 1.0 / avg_latency
+        # Calculate request completion rate (requests per second for single request processing)
+        # This represents the inverse of latency: how frequently one request completes
+        throughput = 1.0 / avg_latency
 
         return BenchmarkMetrics(
             # Core latency metrics
@@ -1217,7 +1217,7 @@ class BenchmarkAnalyzer:
             p99_latency=get_percentile(99),
             # Per-request completion rate (requests/second per experiment)
             # Note: This is NOT system-level throughput for batch processing
-            throughput=per_request_completion_rate,
+            throughput=throughput,
             # Token-level metrics (not available in latency-only benchmarks)
             tokens_per_second=0.0,
             # Experimental metadata
@@ -1250,3 +1250,67 @@ class BenchmarkAnalyzer:
             params.get("timestamp", "unknown"),
         ]
         return "_".join(str(p).replace("/", "-") for p in key_params)
+
+
+class BatchEfficiencyAnalyzer:
+    """Analyze batch efficiency across multiple batch size configurations."""
+
+    def __init__(self, results: List[BenchmarkResult]):
+        self.results = results
+        self.by_batch_size = self._group_by_batch_size()
+
+    def _group_by_batch_size(self) -> Dict[int, List[BenchmarkResult]]:
+        """Group results by batch size for comparison."""
+        from collections import defaultdict
+
+        groups: Dict[int, List[BenchmarkResult]] = defaultdict(list)
+        for result in self.results:
+            groups[result.config.batch_size].append(result)
+        return dict(groups)
+
+    def calculate_scaling_efficiency(self, baseline_batch_size: int = 1) -> Dict[int, float]:
+        """
+        Calculate how efficiently each batch size scales compared to baseline.
+
+        Returns efficiency ratios where:
+        - 1.0 = same efficiency as baseline
+        - >1.0 = better than baseline
+        - <1.0 = worse than baseline
+        """
+        if baseline_batch_size not in self.by_batch_size:
+            raise ValueError(f"No data for baseline batch size {baseline_batch_size}")
+
+        baseline_results = self.by_batch_size[baseline_batch_size]
+        baseline_throughput = sum(r.metrics.throughput for r in baseline_results) / len(
+            baseline_results
+        )
+
+        efficiencies = {}
+        for batch_size, results in self.by_batch_size.items():
+            avg_system_throughput = sum(r.system_throughput for r in results) / len(results)
+            theoretical_throughput = batch_size * baseline_throughput
+            efficiencies[batch_size] = avg_system_throughput / theoretical_throughput
+
+        return efficiencies
+
+    def get_scaling_grades(self, baseline_batch_size: int = 1) -> Dict[int, str]:
+        """Generates a human-readable performance grade for each batch size."""
+
+        efficiency_ratios = self.calculate_scaling_efficiency(baseline_batch_size)
+        grades = {}
+
+        for batch_size, ratio in efficiency_ratios.items():
+            if ratio >= 1.1:
+                grades[batch_size] = "A+ (Excellent)"
+            elif ratio >= 1.0:
+                grades[batch_size] = "A (Very Good)"
+            elif ratio >= 0.9:
+                grades[batch_size] = "B (Good)"
+            elif ratio >= 0.8:
+                grades[batch_size] = "C (Fair)"
+            elif ratio >= 0.7:
+                grades[batch_size] = "D (Poor)"
+            else:
+                grades[batch_size] = "F (Very Poor)"
+
+        return grades

@@ -211,11 +211,10 @@ class ReportGenerator:
         )
 
         for result in sorted_results:
-            system_throughput = result.config.batch_size * result.metrics.throughput
             file.write(
                 f"| {result.config.batch_size} | "
                 f"{result.metrics.avg_latency:.3f} | {result.metrics.throughput:.3f} | "
-                f"{system_throughput:.3f} | {result.config.input_length} | {result.config.output_length} | {result.config.memory_util * 100:.1f} |\n"
+                f"{result.system_throughput:.3f} | {result.config.input_length} | {result.config.output_length} | {result.config.memory_util * 100:.1f} |\n"
             )
 
         file.write("\n**Key Insights:**\n")

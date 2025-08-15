@@ -1261,13 +1261,12 @@ class BatchEfficiencyAnalyzer:
 
     def _group_by_batch_size(self) -> Dict[int, List[BenchmarkResult]]:
         """Group results by batch size for comparison."""
-        groups: Dict[int, List[BenchmarkResult]] = {}
+        from collections import defaultdict
+
+        groups: Dict[int, List[BenchmarkResult]] = defaultdict(list)
         for result in self.results:
-            bs = result.config.batch_size
-            if bs not in groups:
-                groups[bs] = []
-            groups[bs].append(result)
-        return groups
+            groups[result.config.batch_size].append(result)
+        return dict(groups)
 
     def calculate_scaling_efficiency(self, baseline_batch_size: int = 1) -> Dict[int, float]:
         """

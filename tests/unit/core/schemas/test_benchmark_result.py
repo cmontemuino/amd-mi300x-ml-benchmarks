@@ -126,7 +126,6 @@ class TestBenchmarkResultProperties:
 
         # Should have high efficiency ratio due to perfect throughput scaling
         assert result.batch_efficiency_ratio > 0.8
-        assert result.throughput_scaling_efficiency == pytest.approx(1.0, rel=1e-3)
 
     def test_batch_efficiency_ratio_degraded_performance(self, sample_config):
         """Test with metrics showing poor batch scaling"""
@@ -153,7 +152,6 @@ class TestBenchmarkResultProperties:
 
         # Should have low efficiency ratio
         assert result.batch_efficiency_ratio < 0.5
-        assert result.throughput_scaling_efficiency < 0.2
 
     def test_batch_scaling_grade(self, sample_config, sample_metrics):
         """Test the human-readable grading system"""
@@ -173,28 +171,6 @@ class TestBenchmarkResultProperties:
             "D (Poor)",
             "F (Very Poor)",
         ]
-
-    def test_throughput_scaling_efficiency(self, sample_result):
-        """Test pure throughput scaling efficiency calculation"""
-        # For batch_size=8, avg_latency=2.0, throughput=0.5
-        # theoretical_max = 8 * (1.0 / 2.0) = 4.0
-        # efficiency = 0.5 / 4.0 = 0.125
-        expected_efficiency = 0.125
-        assert sample_result.throughput_scaling_efficiency == pytest.approx(
-            expected_efficiency, rel=1e-3
-        )
-
-    def test_latency_scaling_efficiency(self, sample_result):
-        """Test latency scaling efficiency calculation"""
-        # Should return a value between 0 and 1
-        efficiency = sample_result.latency_scaling_efficiency
-        assert 0.0 <= efficiency <= 1.0
-
-    def test_resource_utilization_score(self, sample_result):
-        """Test resource utilization score calculation"""
-        # Should return a value between 0 and 1
-        score = sample_result.resource_utilization_score
-        assert 0.0 <= score <= 1.0
 
     @pytest.mark.parametrize(
         ("batch_size", "throughput", "avg_latency", "expected_system_throughput"),

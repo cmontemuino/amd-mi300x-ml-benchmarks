@@ -49,12 +49,6 @@ class TestBenchmarkResultIntegration:
         batch_efficiency = result.batch_efficiency_ratio
         assert 0.0 <= batch_efficiency <= 1.0  # Should be bounded
 
-        # Test individual efficiency components
-        throughput_efficiency = result.throughput_scaling_efficiency
-        theoretical_max = 32 * (1.0 / 5.1)  # ≈ 6.27
-        expected_throughput_efficiency = 0.196 / theoretical_max  # ≈ 0.031
-        assert throughput_efficiency == pytest.approx(expected_throughput_efficiency, rel=1e-3)
-
         # Test that the new composite score is reasonable for this scenario
         # This scenario has relatively poor throughput scaling but high memory utilization
         assert batch_efficiency > 0.0  # Should be positive
@@ -70,7 +64,3 @@ class TestBenchmarkResultIntegration:
             "D (Poor)",
             "F (Very Poor)",
         ]
-
-        # Test resource utilization score
-        resource_score = result.resource_utilization_score
-        assert 0.0 <= resource_score <= 1.0

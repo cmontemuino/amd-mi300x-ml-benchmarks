@@ -138,96 +138,76 @@ class BenchmarkResult(BaseModel):
     def batch_efficiency_ratio(self) -> float:
         """Calculate batch processing efficiency compared to single requests.
 
-        This ratio considers multiple factors:
-        - Throughput scaling efficiency
-        - Latency penalty factor
-        - Memory utilization impact
-        - System resource efficiency
-
-        The ratio indicates how efficiently the system handles batch processing
-        compared to processing requests individually.
+        This metric compares the actual system throughput to what would be achieved
+        if we processed the same number of requests individually with single-request latency.
 
         Returns:
-            float: Efficiency ratio (1.0 = perfect scaling, <1.0 = degraded performance)
+            float: Efficiency ratio where:
+                - 1.0 = same total time as individual requests
+                - >1.0 = batching provides improvement
+                - <1.0 = batching causes degradation
         """
         if self.config.batch_size <= 1:
             return 1.0
 
-        # Base throughput efficiency
-        theoretical_max_throughput = self.config.batch_size * (1.0 / self.metrics.avg_latency)
-        throughput_efficiency = self.metrics.throughput / theoretical_max_throughput
+        # A baseline single-request latency for comparison is needed
+        # This should ideally come from actual batch_size=1 measurements
+        # Use a reasonable estimation approach
 
-        # Latency scaling penalty
-        # Ideal latency scaling should be minimal with batch size
-        base_latency_estimate = self.metrics.avg_latency / self.config.batch_size
-        latency_penalty = 1.0 - min(
-            (self.metrics.avg_latency - base_latency_estimate) / self.metrics.avg_latency, 0.5
+        # System throughput: total requests/sec the system can handle
+        system_throughput = self.system_throughput
+
+        # Estimate what throughput would be when processing requests individually
+        # This is a rough approximation - ideally we'd have actual batch_size=1 data
+        estimated_single_request_latency = self.metrics.avg_latency / self.config.batch_size
+        estimated_individual_throughput = self.config.batch_size * (
+            1.0 / estimated_single_request_latency
         )
 
-        # Memory efficiency factor
-        memory_efficiency = min(
-            self.config.memory_util * 1.2, 1.0
-        )  # Reward higher memory utilization
+        # Efficiency ratio: actual vs estimated individual processing
+        return system_throughput / estimated_individual_throughput
 
-        # Variance penalty - lower variance is better
-        variance_penalty = 1.0 - min(self.metrics.latency_std / self.metrics.avg_latency, 0.3)
+    @property
+    def batch_latency_overhead(self) -> float:
+        """
+        Calculate the latency overhead introduced by batching.
 
-        # Combined efficiency score
-        combined_efficiency = (
-            throughput_efficiency * 0.4
-            + latency_penalty * 0.3
-            + memory_efficiency * 0.2
-            + variance_penalty * 0.1
+        Returns:
+            float: Overhead factor where:
+                - 1.0 = no overhead (latency scales linearly with batch size)
+                - >1.0 = batching introduces overhead
+                - <1.0 = batching reduces per-request latency (ideal case)
+        """
+        if self.config.batch_size <= 1:
+            return 1.0
+
+        # System throughput: total requests/sec the system can handle
+        actual_system_throughput = self.system_throughput
+
+        # This is an approximation - ideally we'd have actual batch_size=1 measurements
+        estimated_individual_latency = self.metrics.avg_latency / self.config.batch_size
+        estimated_individual_system_throughput = (
+            self.config.batch_size / estimated_individual_latency
         )
 
-        return max(min(combined_efficiency, 1.0), 0.0)  # Clamp between 0 and 1
+        return actual_system_throughput / estimated_individual_system_throughput
 
     @property
     def batch_scaling_grade(self) -> str:
-        """Human-readable grade for batch efficiency"""
+        """Human-readable assessment of batch scaling performance."""
         ratio = self.batch_efficiency_ratio
-        if ratio >= 0.9:
+        if ratio >= 1.1:
             return "A+ (Excellent)"
-        elif ratio >= 0.8:
+        elif ratio >= 1.0:
             return "A (Very Good)"
-        elif ratio >= 0.7:
+        elif ratio >= 0.9:
             return "B (Good)"
-        elif ratio >= 0.6:
+        elif ratio >= 0.8:
             return "C (Fair)"
-        elif ratio >= 0.5:
+        elif ratio >= 0.7:
             return "D (Poor)"
         else:
             return "F (Very Poor)"
-
-    @property
-    def throughput_scaling_efficiency(self) -> float:
-        """Pure throughput scaling efficiency"""
-        if self.config.batch_size <= 1:
-            return 1.0
-        theoretical_max = self.config.batch_size * (1.0 / self.metrics.avg_latency)
-        return self.metrics.throughput / theoretical_max
-
-    @property
-    def latency_scaling_efficiency(self) -> float:
-        """How well latency scales with batch size"""
-        if self.config.batch_size <= 1:
-            return 1.0
-        # Ideal: latency should increase minimally with batch size
-        ideal_latency_increase = (
-            1.0 + (self.config.batch_size - 1) * 0.1
-        )  # 10% per additional batch item
-        actual_latency_ratio = self.metrics.avg_latency / (
-            self.metrics.avg_latency / ideal_latency_increase
-        )
-        return min(1.0 / actual_latency_ratio, 1.0)
-
-    @property
-    def resource_utilization_score(self) -> float:
-        """Overall resource utilization effectiveness"""
-        # Combines memory utilization and system throughput
-        memory_score = self.config.memory_util
-        throughput_score = min(self.system_throughput / (self.config.batch_size * 2.0), 1.0)
-        return (memory_score + throughput_score) / 2.0
 
 
 class ExperimentFiles(BaseModel):

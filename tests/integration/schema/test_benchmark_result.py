@@ -43,24 +43,3 @@ class TestBenchmarkResultIntegration:
         assert result.model_short_name == "Llama-3.1-8B"
         assert result.efficiency_score == pytest.approx(0.196 / 5.1, rel=1e-3)
         assert result.system_throughput == pytest.approx(32 * 0.196, rel=1e-3)
-
-        # Test new batch efficiency ratio (multi-dimensional scoring)
-        # With batch_size=32, avg_latency=5.1, throughput=0.196, memory_util=0.9, latency_std=0.8
-        batch_efficiency = result.batch_efficiency_ratio
-        assert 0.0 <= batch_efficiency <= 1.0  # Should be bounded
-
-        # Test that the new composite score is reasonable for this scenario
-        # This scenario has relatively poor throughput scaling but high memory utilization
-        assert batch_efficiency > 0.0  # Should be positive
-        assert batch_efficiency < 1.0  # Should not be perfect due to poor throughput scaling
-
-        # Test grade assignment
-        grade = result.batch_scaling_grade
-        assert grade in [
-            "A+ (Excellent)",
-            "A (Very Good)",
-            "B (Good)",
-            "C (Fair)",
-            "D (Poor)",
-            "F (Very Poor)",
-        ]

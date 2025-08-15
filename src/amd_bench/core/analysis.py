@@ -1174,10 +1174,9 @@ class BenchmarkAnalyzer:
         """
 
         # Validate required fields
-        if "avg_latency" not in data:
+        avg_latency = data.get("avg_latency")
+        if avg_latency is None:
             raise KeyError("Required field 'avg_latency' missing from benchmark data")
-
-        avg_latency = data.get("avg_latency", 0.0)
         if avg_latency <= 0:
             raise ValueError(f"Invalid avg_latency value: {avg_latency}. Must be positive.")
 

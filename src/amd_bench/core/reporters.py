@@ -215,7 +215,7 @@ class ReportGenerator:
             file.write(
                 f"| {result.config.batch_size} | "
                 f"{result.metrics.avg_latency:.3f} | {result.metrics.throughput:.3f} | "
-                f"{system_throughput:.3f} | {result.config.input_length} | {result.config.output_length} | {result.config.memory_util} |\n"
+                f"{system_throughput:.3f} | {result.config.input_length} | {result.config.output_length} | {result.config.memory_util * 100:.1f} |\n"
             )
 
         file.write("\n**Key Insights:**\n")

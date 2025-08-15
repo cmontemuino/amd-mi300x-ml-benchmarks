@@ -115,6 +115,46 @@ class BenchmarkResult(BaseModel):
             return self.metrics.throughput / self.metrics.avg_latency
         return 0.0
 
+    @property
+    def system_throughput(self) -> float:
+        """Calculate system-level throughput accounting for batch processing.
+
+        This property calculates the actual system throughput by considering
+        the batch size used in the experiment, providing a more accurate measure
+        of system processing capacity for batch workloads.
+
+        Returns:
+            float: System throughput in requests/second (`self.metrics.throughput`),
+                   accounting for batch size
+
+        Example:
+            For an experiment with batch_size=8 and avg_latency=2.0s:
+            - per_request_completion_rate = 1/2.0 = 0.5 req/s
+            - system_throughput = 8 * 0.5 = 4.0 req/s
+        """
+        return self.config.batch_size * self.metrics.throughput
+
+    @property
+    def batch_efficiency_ratio(self) -> float:
+        """Calculate batch processing efficiency compared to single requests.
+
+        This ratio indicates how efficiently the system handles batch processing
+        compared to processing requests individually.
+
+        Returns:
+            float: Efficiency ratio (1.0 = perfect scaling, <1.0 = degraded performance)
+        """
+        if self.config.batch_size <= 1:
+            return 1.0
+
+        # Theoretical throughput if batch_size requests were processed in parallel
+        theoretical_throughput = self.config.batch_size * (1.0 / self.metrics.avg_latency)
+
+        # Actual per-request completion rate
+        actual_completion_rate = self.metrics.throughput
+
+        return actual_completion_rate / theoretical_throughput
+
 
 class ExperimentFiles(BaseModel):
     """File paths for a complete experiment."""

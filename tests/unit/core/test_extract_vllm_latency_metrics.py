@@ -140,7 +140,7 @@ class TestExtractVllmLatencyMetrics:
         assert result.latency_std == pytest.approx(expected_std, abs=0.001)
 
     @pytest.mark.parametrize(
-        "avg_latency, expected_throughput",
+        ("avg_latency", "expected_throughput"),
         [
             (1.0, 1.0),  # 1 second -> 1 req/s
             (2.0, 0.5),  # 2 seconds -> 0.5 req/s

@@ -1115,7 +1115,6 @@ class BenchmarkAnalyzer:
 
         - **Per-Request Completion Rate**: 1 / avg_latency (requests/second/experiment)
           - Measures how frequently individual requests complete
-          - Industry standard for latency benchmarks
           - Lower values for larger batch sizes due to queueing delays
 
         - **Batch-Level Throughput**: batch_size / avg_latency (theoretical max)
@@ -1203,8 +1202,9 @@ class BenchmarkAnalyzer:
             """Extract percentile with flexible key handling."""
             return float(percentiles.get(str(p), percentiles.get(p, 0.0)))
 
-        # Calculate per-request completion rate (industry standard for latency benchmarks)
-        per_request_completion_rate = 1.0 / avg_latency
+        # Calculate request completion rate (requests per second for single request processing)
+        # This represents the inverse of latency: how frequently one request completes
+        throughput = 1.0 / avg_latency
 
         return BenchmarkMetrics(
             # Core latency metrics
@@ -1217,7 +1217,7 @@ class BenchmarkAnalyzer:
             p99_latency=get_percentile(99),
             # Per-request completion rate (requests/second per experiment)
             # Note: This is NOT system-level throughput for batch processing
-            throughput=per_request_completion_rate,
+            throughput=throughput,
             # Token-level metrics (not available in latency-only benchmarks)
             tokens_per_second=0.0,
             # Experimental metadata

@@ -1105,23 +1105,123 @@ class BenchmarkAnalyzer:
 
     @staticmethod
     def _extract_vllm_latency_metrics(data: Dict[str, Any]) -> BenchmarkMetrics:
-        """Extract metrics from vLLM latency benchmark results"""
+        """Extract metrics from vLLM latency benchmark results.
+
+        This method processes vLLM latency benchmark data and calculates standardized
+        performance metrics. It handles the important distinction between per-request
+        completion rate and system-level throughput for batch processing scenarios.
+
+        **Key Metric Definitions:**
+
+        - **Per-Request Completion Rate**: 1 / avg_latency (requests/second/experiment)
+          - Measures how frequently individual requests complete
+          - Industry standard for latency benchmarks
+          - Lower values for larger batch sizes due to queueing delays
+
+        - **Batch-Level Throughput**: batch_size / avg_latency (theoretical max)
+          - Measures aggregate system processing capacity
+          - Not calculated here as batch_size is not available in this context
+          - Calculated separately at the experiment level
+
+        **Why Per-Request Rates Appear "Low" for Large Batches:**
+
+        For batch sizes >1, individual requests experience queueing delays:
+        - Batch size 1: Request processes immediately → high completion rate
+        - Batch size 32: Each request waits for 31 others → low completion rate
+        - This reflects real-world user experience in interactive systems
+
+        Args:
+            data (Dict[str, Any]): Raw vLLM benchmark results containing:
+                - avg_latency: Mean response time across all requests (seconds)
+                - latencies: List of individual request latencies (optional)
+                - percentiles: Dictionary of latency percentiles (optional)
+
+        Returns:
+            BenchmarkMetrics: Standardized metrics object with:
+                - avg_latency: Average request latency (seconds)
+                - throughput: Per-request completion rate (requests/second)
+                - percentile metrics: P50, P90, P95, P99 latencies
+                - statistical measures: Standard deviation, iteration count
+
+        Raises:
+            KeyError: If required 'avg_latency' field is missing from data
+            ValueError: If avg_latency is zero or negative
+
+        Example:
+            ```
+            # Sample vLLM latency data
+            vllm_data = {
+                "avg_latency": 2.5,  # seconds per request
+                "latencies": [2.3, 2.5, 2.7, 2.4, 2.6],
+                "percentiles": {"50": 2.5, "90": 2.7, "95": 2.8, "99": 2.9}
+            }
+
+            metrics = BenchmarkAnalyzer._extract_vllm_latency_metrics(vllm_data)
+
+            # Results interpretation:
+            print(f"Request completion rate: {metrics.throughput:.3f} req/s")
+            # Output: "Request completion rate: 0.400 req/s"
+
+            # For batch size 8, system throughput would be:
+            # system_throughput = 8 * metrics.throughput = 3.200 req/s
+            # (calculated at experiment level with batch size context)
+            ```
+
+        Note:
+            This method focuses on per-request performance metrics consistent with
+            latency benchmarking standards. System-level throughput calculations
+            requiring batch size context are handled in the experiment analysis layer.
+        """
+
+        # Validate required fields
+        avg_latency = data.get("avg_latency")
+        if avg_latency is None:
+            raise KeyError("Required field 'avg_latency' missing from benchmark data")
+        if avg_latency <= 0:
+            raise ValueError(f"Invalid avg_latency value: {avg_latency}. Must be positive.")
+
+        # Extract optional data with robust handling
         latencies = data.get("latencies", [])
         percentiles = data.get("percentiles", {})
 
-        # Calculate additional statistics if not provided
-        import statistics
+        # Calculate statistical measures
+        latency_std = 0.0
+        total_iterations = len(latencies)
+
+        if len(latencies) > 1:
+            import statistics
+
+            try:
+                latency_std = statistics.stdev(latencies)
+            except statistics.StatisticsError:
+                logger.warning("Could not calculate latency standard deviation")
+                latency_std = 0.0
+
+        # Extract percentiles with flexible key formats
+        # vLLM may use string keys ("50") or integer keys (50)
+        def get_percentile(p: int) -> float:
+            """Extract percentile with flexible key handling."""
+            return float(percentiles.get(str(p), percentiles.get(p, 0.0)))
+
+        # Calculate per-request completion rate (industry standard for latency benchmarks)
+        per_request_completion_rate = 1.0 / avg_latency
 
         return BenchmarkMetrics(
-            avg_latency=data.get("avg_latency", 0.0),
-            latency_std=statistics.stdev(latencies) if len(latencies) > 1 else 0.0,
-            p50_latency=percentiles.get("50", percentiles.get(50, 0.0)),
-            p90_latency=percentiles.get("90", percentiles.get(90, 0.0)),
-            p95_latency=percentiles.get("95", percentiles.get(95, 0.0)),
-            p99_latency=percentiles.get("99", percentiles.get(99, 0.0)),
-            throughput=1.0 / data.get("avg_latency", 1.0),  # Requests per second
-            tokens_per_second=0.0,  # Not available in latency data
-            total_iterations=len(latencies),
+            # Core latency metrics
+            avg_latency=avg_latency,
+            latency_std=latency_std,
+            # Percentile latencies (in seconds)
+            p50_latency=get_percentile(50),
+            p90_latency=get_percentile(90),
+            p95_latency=get_percentile(95),
+            p99_latency=get_percentile(99),
+            # Per-request completion rate (requests/second per experiment)
+            # Note: This is NOT system-level throughput for batch processing
+            throughput=per_request_completion_rate,
+            # Token-level metrics (not available in latency-only benchmarks)
+            tokens_per_second=0.0,
+            # Experimental metadata
+            total_iterations=total_iterations if total_iterations > 0 else 1,
         )
 
     @staticmethod
